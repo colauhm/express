@@ -1,6 +1,7 @@
 import { padTo2Digits, getServerUrl } from '../../utils/function.js';
 
 const BoardItem = (
+    selectedButtonId,
     boardType,
     postId,
     date,
@@ -23,7 +24,7 @@ const BoardItem = (
     ) {
         return;
     }
-    console.log(boardType);
+    console.log(selectedButtonId);
     // 날짜 포맷 변경 YYYY-MM-DD hh:mm:ss
     const dateObj = new Date(date);
     const year = dateObj.getFullYear();
@@ -35,26 +36,28 @@ const BoardItem = (
 
     const formattedDate = `${year}-${padTo2Digits(month)}-${padTo2Digits(day)} ${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
     const API_HOST = getServerUrl();
-
-    return `
-    <a href="/html/board.html?id=${postId}">
-        <div class="boardItem">
-            <h2 class="title">${postTitle}</h2>
-            <div class="info">
-                <h3 class="views">좋아요 <b>${like}</b></h3>
-                <h3 class="views">댓글 <b>${commentCount}</b></h3>
-                <h3 class="views">조회수 <b>${hits}</b></h3>
-                <p class="date">${formattedDate}</p>
-            </div>
-            <div class="writerInfo">
-            <picture class="img">
-                <img src="${`${API_HOST}${imgUrl}`}" alt="img">
-            </picture>
-            <h2 class="writer">${writer}</h2>
-        </div>
-        </div>
-    </a>
-`;
+    if(selectedButtonId == boardType){
+        return `
+            <a href="/html/board.html?id=${postId}">
+                <div class="boardItem">
+                    <h2 class="title">${postTitle}</h2>
+                    <div class="info">
+                        <h3 class="views">좋아요 <b>${like}</b></h3>
+                        <h3 class="views">댓글 <b>${commentCount}</b></h3>
+                        <h3 class="views">조회수 <b>${hits}</b></h3>
+                        <p class="date">${formattedDate}</p>
+                    </div>
+                    <div class="writerInfo">
+                    <picture class="img">
+                        <img src="${`${API_HOST}${imgUrl}`}" alt="img">
+                    </picture>
+                    <h2 class="writer">${writer}</h2>
+                </div>
+                </div>
+            </a>
+        `;
+    }
+    
 };
 
 export default BoardItem;
