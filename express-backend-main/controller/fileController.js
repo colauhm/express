@@ -16,6 +16,7 @@ export const uploadFile = (request, response) => {
 };
 
 export const uploadPostFile = (request, response) => {
+    console.log("uploadPostFile")
     if (!request.file)
         response.status(400).send({
             status: 400,

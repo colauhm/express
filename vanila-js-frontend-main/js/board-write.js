@@ -138,10 +138,10 @@ const changeEventHandler = async (event, uid) => {
             console.log('파일이 선택되지 않았습니다.');
             return;
         }
-
+        console.log(file);
         const formData = new FormData();
         formData.append('postFile', file);
-
+        console.log(formData.has('postFile'));
         // 파일 업로드를 위한 POST 요청 실행
         try {
             const response = await fileUpload(formData);
