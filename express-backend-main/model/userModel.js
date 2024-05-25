@@ -102,6 +102,7 @@ export const getUser = async (requestData, response) => {
         created_at: userData[0].created_at,
         updated_at: userData[0].updated_at,
         deleted_at: userData[0].deleted_at,
+        power: userData[0].power,
     };
     return results;
 };

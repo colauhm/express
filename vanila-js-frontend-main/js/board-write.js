@@ -235,7 +235,7 @@ const setModifyData = data => {
 const init = async () => {
     const data = await authCheck();
     const modifyId = checkModifyMode();
-
+    console.log(data.data)
     const profileImage =
         data.data.profileImagePath === undefined
             ? `${getServerUrl()}/public/image/profile/default.jpg`

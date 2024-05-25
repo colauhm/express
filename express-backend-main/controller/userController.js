@@ -387,7 +387,7 @@ export const checkAuth = async (request, response) => {
                 message: 'not_found_user',
                 data: null,
             });
-
+        console.log("userData")
         console.log(userData);
 
         if (parseInt(userData.userId, 10) !== parseInt(userId, 10))
@@ -407,6 +407,7 @@ export const checkAuth = async (request, response) => {
                 profileImagePath: userData.profile_image,
                 auth_token: userData.session_id,
                 auth_status: true,
+                userPower: userData.power,
             },
         });
     } catch (error) {
