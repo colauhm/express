@@ -8,12 +8,13 @@ const HTTP_NOT_AUTHORIZED = 401;
 const SCROLL_THRESHOLD = 0.9;
 const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
-const boardSelectContainer = document.querySelector('.boardSelect');
+const boardCategorySelectContainer = document.querySelector('.boardCategory');
+const boardCategorySelectButtons = document.querySelectorAll('.boardCategoryButton');
 
-
-const boardCategory = boardSelectContainer.addEventListener('click', async event => {
+const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event, selectedButtonId = 'notice') => {
     if (event.target.tagName === 'BUTTON') {
-        const selectedButtonId = event.target.id;
+        selectedButtonId = event.target.id;
+        selectedboardCategoryButtonSet(selectedButtonId)
         const boardList = await getBoardItem();
         setBoardItem(boardList, selectedButtonId, true)
         return selectedButtonId;
@@ -21,6 +22,14 @@ const boardCategory = boardSelectContainer.addEventListener('click', async event
 }
 );
 
+const selectedboardCategoryButtonSet = selectedButtonId =>  {
+    boardCategorySelectButtons.forEach(button => {
+        console.log("boardCategorySelectButtons")
+        button.disabled = false;
+    });
+    const selectButton = document.getElementById(`${selectedButtonId}`);
+    selectButton.disabled = true;
+}
 
     
 
