@@ -9,15 +9,21 @@ const SCROLL_THRESHOLD = 0.9;
 const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
 const boardSelectContainer = document.querySelector('.boardSelect');
-const boardType = boardSelectContainer.addEventListener('click', function(event) {
-    // 클릭된 요소가 버튼인지 확인합니다.
+
+
+const boardCategory = boardSelectContainer.addEventListener('click', async event => {
     if (event.target.tagName === 'BUTTON') {
-        console.log(event.target.id);
         const selectedButtonId = event.target.id;
-        // 클릭된 버튼의 id를 가져옵니다.
+        const boardList = await getBoardItem();
+        setBoardItem(boardList, selectedButtonId, true)
         return selectedButtonId;
     }
-});
+}
+);
+
+
+    
+
 
 
 
@@ -33,14 +39,16 @@ const getBoardItem = async (offset = 0, limit = 5) => {
     return data.data;
 };
 
-const setBoardItem = boardData => {
+const setBoardItem = (boardData, selectedBoardCategory = 'notice', reset = false) => {
     const boardList = document.querySelector('.boardList');
     if (boardList && boardData) {
+        if (reset)
+            boardList.innerHTML = '';
         const itemsHtml = boardData
             .map(data =>
                 BoardItem(
-                    boardType,
-                    data.boardType,
+                    selectedBoardCategory,
+                    data.board_category,
                     data.post_id,
                     data.created_at,
                     data.post_title,
@@ -90,7 +98,7 @@ const addInfinityScrollEvent = () => {
 const init = async () => {
     try {
         const data = await authCheck();
-        if (data.status === HTTP_NOT_AUTHORIZED && boardType != 'notice') {
+        if (data.status === HTTP_NOT_AUTHORIZED && boardCategory != 'notice') {
             window.location.href = '/html/login.html';
             return;
         }

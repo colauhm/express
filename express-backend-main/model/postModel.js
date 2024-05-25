@@ -5,7 +5,7 @@ export const getPosts = async (requestData, response) => {
     const { offset, limit } = requestData;
     const sql = `
     SELECT
-        post_table.boardType,
+        post_table.board_category,
         post_table.post_id,
         post_table.post_title,
         post_table.post_content,
@@ -59,7 +59,7 @@ export const getPost = async (requestData, response) => {
         post_table.created_at,
         post_table.updated_at,
         post_table.deleted_at,
-        post_table.boardType,
+        post_table.board_category,
         CASE
             WHEN post_table.\`like\` >= 1000000 THEN CONCAT(ROUND(post_table.\`like\` / 1000000, 1), 'M')
             WHEN post_table.\`like\` >= 1000 THEN CONCAT(ROUND(post_table.\`like\` / 1000, 1), 'K')

@@ -2,7 +2,7 @@ import { padTo2Digits, getServerUrl } from '../../utils/function.js';
 
 const BoardItem = (
     selectedButtonId,
-    boardType,
+    boardCategory,
     postId,
     date,
     postTitle,
@@ -24,7 +24,6 @@ const BoardItem = (
     ) {
         return;
     }
-    console.log(selectedButtonId);
     // 날짜 포맷 변경 YYYY-MM-DD hh:mm:ss
     const dateObj = new Date(date);
     const year = dateObj.getFullYear();
@@ -36,7 +35,8 @@ const BoardItem = (
 
     const formattedDate = `${year}-${padTo2Digits(month)}-${padTo2Digits(day)} ${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
     const API_HOST = getServerUrl();
-    if(selectedButtonId == boardType){
+    console.log(selectedButtonId)
+    if(selectedButtonId == boardCategory){
         return `
             <a href="/html/board.html?id=${postId}">
                 <div class="boardItem">
