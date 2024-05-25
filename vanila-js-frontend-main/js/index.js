@@ -11,9 +11,9 @@ const ITEMS_PER_LOAD = 5;
 const boardCategorySelectContainer = document.querySelector('.boardCategory');
 const boardCategorySelectButtons = document.querySelectorAll('.boardCategoryButton');
 
-const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event, selectedButtonId = 'notice') => {
+const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event) => {
     if (event.target.tagName === 'BUTTON') {
-        selectedButtonId = event.target.id;
+        const selectedButtonId = event.target.id;
         selectedboardCategoryButtonSet(selectedButtonId)
         const boardList = await getBoardItem();
         setBoardItem(boardList, selectedButtonId, true)
@@ -22,7 +22,7 @@ const boardCategory = boardCategorySelectContainer.addEventListener('click', asy
 }
 );
 
-const selectedboardCategoryButtonSet = selectedButtonId =>  {
+const selectedboardCategoryButtonSet = (selectedButtonId = 'notice') =>  {
     boardCategorySelectButtons.forEach(button => {
         console.log("boardCategorySelectButtons")
         button.disabled = false;
@@ -106,6 +106,7 @@ const addInfinityScrollEvent = () => {
 
 const init = async () => {
     try {
+        selectedboardCategoryButtonSet();
         const data = await authCheck();
         if (data.status === HTTP_NOT_AUTHORIZED && boardCategory != 'notice') {
             window.location.href = '/html/login.html';
