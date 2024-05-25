@@ -29,12 +29,46 @@ const contentHelpElement = document.querySelector(
 );
 
 const boardWrite = {
+    cateGory: '',
     title: '',
     content: '',
 };
 
+const boardCategorySelectContainer = document.querySelector('.boardCategory');
+const noticeButton = document.getElementById('notice');
+const boardCategorySelectButtons = document.querySelectorAll('.boardCategoryButton');
+const nonRequirePowerBoardCategory = [document.querySelector('#free'), document.querySelector('#QnA')]
+
+let admin = false;
 let isModifyMode = false;
 let modifyData = {};
+
+boardCategorySelectContainer.addEventListener('click', async (event) => {
+    if (event.target.tagName === 'BUTTON') {
+        const selectedButtonId = event.target.id;
+        selectedboardCategoryButtonSet(selectedButtonId, admin)
+    }
+}
+);
+const selectedboardCategoryButtonSet = (selectedButtonId) =>  {
+    if(admin){
+        
+        boardCategorySelectButtons.forEach(button => {
+            button.disabled = false;
+        });
+        const selectButton = document.getElementById(`${selectedButtonId}`);
+    selectButton.disabled = true;
+    }
+    else{
+        console.log(false)
+        nonRequirePowerBoardCategory.forEach(button => {
+            button.disabled = false;
+        });
+        const selectButton = document.getElementById(`${selectedButtonId}`);
+    selectButton.disabled = true;
+    }
+    
+}
 
 const observeSignupData = () => {
     const { title, content } = boardWrite;
@@ -234,16 +268,23 @@ const setModifyData = data => {
 
 const init = async () => {
     const data = await authCheck();
+    admin = data.data.userPower == 'admin' ? true : false;
     const modifyId = checkModifyMode();
-    console.log(data.data)
     const profileImage =
         data.data.profileImagePath === undefined
             ? `${getServerUrl()}/public/image/profile/default.jpg`
             : getServerUrl() + data.data.profileImagePath;
 
     prependChild(document.body, Header('커뮤니티', 1, profileImage));
-
+    if (admin) {
+        selectedboardCategoryButtonSet('notice',admin);
+    }
+    else{
+        noticeButton.disabled = true;
+        selectedboardCategoryButtonSet('free', admin);
+    }
     if (modifyId) {
+        boardCategorySelectButtons.disabled = true;
         isModifyMode = true;
         modifyData = await getBoardModifyData(modifyId);
 

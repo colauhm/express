@@ -24,7 +24,6 @@ const boardCategory = boardCategorySelectContainer.addEventListener('click', asy
 
 const selectedboardCategoryButtonSet = (selectedButtonId = 'notice') =>  {
     boardCategorySelectButtons.forEach(button => {
-        console.log("boardCategorySelectButtons")
         button.disabled = false;
     });
     const selectButton = document.getElementById(`${selectedButtonId}`);
