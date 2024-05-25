@@ -32,6 +32,7 @@ const boardWrite = {
     cateGory: '',
     title: '',
     content: '',
+    secret:false,
 };
 
 const boardCategorySelectContainer = document.querySelector('.boardCategory');
@@ -56,17 +57,16 @@ const selectedboardCategoryButtonSet = (selectedButtonId) =>  {
         boardCategorySelectButtons.forEach(button => {
             button.disabled = false;
         });
-        const selectButton = document.getElementById(`${selectedButtonId}`);
-    selectButton.disabled = true;
     }
     else{
         console.log(false)
         nonRequirePowerBoardCategory.forEach(button => {
             button.disabled = false;
         });
-        const selectButton = document.getElementById(`${selectedButtonId}`);
-    selectButton.disabled = true;
     }
+    const selectButton = document.getElementById(`${selectedButtonId}`);
+    selectButton.disabled = true;
+    boardWrite.category = selectedButtonId;
     
 }
 
@@ -84,6 +84,8 @@ const observeSignupData = () => {
 // 엘리먼트 값 가져오기 title, content
 const getBoardData = () => {
     return {
+        secret: boardWrite.secret,
+        boardCategory: boardWrite.cateGory,
         postTitle: boardWrite.title,
         postContent: boardWrite.content,
         attachFilePath:

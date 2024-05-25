@@ -38,10 +38,12 @@ export const writePost = async (request, response) => {
                 data: null,
             });
 
-        const { postTitle, postContent, attachFilePath } = request.body;
+        const { secreat, boardCategory, postTitle, postContent, attachFilePath } = request.body;
         const userId = request.headers.userid;
 
         const requestData = {
+            secret: mysql.escape(secreat),
+            boardCategory: mysql.escape(boardCategory),
             userId: mysql.escape(userId),
             postTitle: mysql.escape(postTitle),
             postContent: mysql.escape(postContent),

@@ -118,7 +118,7 @@ export const getPost = async (requestData, response) => {
 
 // 게시글 작성 (일반 게시글)
 export const writePlainPost = async (requestData, response) => {
-    const { userId, postTitle, postContent } = requestData;
+    const { secret, boardCategory, userId, postTitle, postContent } = requestData;
 
     const nicknameSql = `
     SELECT nickname FROM user_table
@@ -129,8 +129,8 @@ export const writePlainPost = async (requestData, response) => {
 
     const writePostSql = `
     INSERT INTO post_table
-    (user_id, nickname, post_title, post_content)
-    VALUES (${userId}, '${nicknameResults[0].nickname}', ${postTitle}, ${postContent});
+    (secret, board_category, user_id, nickname, post_title, post_content)
+    VALUES (${secret}, ${boardCategory}, ${userId}, '${nicknameResults[0].nickname}', ${postTitle}, ${postContent});
     `;
 
     const writePostResults = await dbConnect.query(writePostSql, response);
