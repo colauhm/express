@@ -38,11 +38,11 @@ export const writePost = async (request, response) => {
                 data: null,
             });
 
-        const { secreat, boardCategory, postTitle, postContent, attachFilePath } = request.body;
+        const { secret, boardCategory, postTitle, postContent, attachFilePath } = request.body;
         const userId = request.headers.userid;
-
+       
         const requestData = {
-            secret: mysql.escape(secreat),
+            secret: mysql.escape(secret),
             boardCategory: mysql.escape(boardCategory),
             userId: mysql.escape(userId),
             postTitle: mysql.escape(postTitle),
@@ -50,6 +50,7 @@ export const writePost = async (request, response) => {
             attachFilePath:
                 attachFilePath === null ? null : mysql.escape(attachFilePath),
         };
+        console.log(requestData)
         const results = await postModel.writePlainPost(requestData, response);
 
         if (!results || results === null)

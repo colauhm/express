@@ -29,7 +29,7 @@ const contentHelpElement = document.querySelector(
 );
 
 const boardWrite = {
-    cateGory: '',
+    category: '',
     title: '',
     content: '',
     secret:false,
@@ -47,7 +47,8 @@ let modifyData = {};
 boardCategorySelectContainer.addEventListener('click', async (event) => {
     if (event.target.tagName === 'BUTTON') {
         const selectedButtonId = event.target.id;
-        selectedboardCategoryButtonSet(selectedButtonId, admin)
+        selectedboardCategoryButtonSet(selectedButtonId, admin);
+        
     }
 }
 );
@@ -67,6 +68,8 @@ const selectedboardCategoryButtonSet = (selectedButtonId) =>  {
     const selectButton = document.getElementById(`${selectedButtonId}`);
     selectButton.disabled = true;
     boardWrite.category = selectedButtonId;
+    console.log(boardWrite.category)
+    console.log(getBoardData())
     
 }
 
@@ -85,7 +88,7 @@ const observeSignupData = () => {
 const getBoardData = () => {
     return {
         secret: boardWrite.secret,
-        boardCategory: boardWrite.cateGory,
+        boardCategory: boardWrite.category,
         postTitle: boardWrite.title,
         postContent: boardWrite.content,
         attachFilePath:
@@ -98,7 +101,7 @@ const getBoardData = () => {
 // 버튼 클릭시 이벤트
 const addBoard = async () => {
     const boardData = getBoardData();
-
+    console.log(boardData)
     // boardData가 false일 경우 함수 종료
     if (!boardData) return Dialog('게시글', '게시글을 입력해주세요.');
 

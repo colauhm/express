@@ -129,7 +129,7 @@ export const writePlainPost = async (requestData, response) => {
 
     const writePostSql = `
     INSERT INTO post_table
-    (secret, board_category, user_id, nickname, post_title, post_content)
+    (secret_post, board_category, user_id, nickname, post_title, post_content)
     VALUES (${secret}, ${boardCategory}, ${userId}, '${nicknameResults[0].nickname}', ${postTitle}, ${postContent});
     `;
 
