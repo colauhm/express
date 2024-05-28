@@ -10,23 +10,27 @@ const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
 const boardCategorySelectContainer = document.querySelector('.boardCategory');
 const boardCategorySelectButtons = document.querySelectorAll('.boardCategoryButton');
-const searchCheck = document.getElementById('searchCheck');
-const searchDetailCheckBox = document.getElementById('searchDetail');
-const searchDetail = document.querySelector('.searchDetail');
+const search = {
+    searchContent : document.getElementById('searchContent'),
+    searchCheck :document.getElementById('searchCheck'),
+    searchDetailCheckBox : document.getElementById('searchDetail'),
+    searchDetail : document.querySelector('.searchDetail'),
+    searchDetailLabel : document.getElementById('searchDetailLabel')
+}
+
 const postButton = document.getElementById('writeLink');
-const search = document.querySelector('.search')
 
-
-
-searchCheck.addEventListener('change',() => {
-    const displayState = searchCheck.checked ? 'none' : 'flex';
+const displayButtonSet = (searchCheck = false) => {
+    const displayState = searchCheck ? 'none' : 'flex';
+    const searchDisplayState = searchCheck ? 'flex' : 'none';
     boardCategorySelectContainer.style.display = displayState;
     postButton.style.display = displayState;
-})
-// searchDetailCheckBox.addEventListener('change', () => {
-//     console.log("check")
-//     searchDetaildropDown(searchDetailCheckBox.checked);
-// })
+    search.searchContent.style.display = searchDisplayState;
+    search.searchDetailLabel.style.display = searchDisplayState;
+}
+
+search.searchCheck.addEventListener('change', () => {console.log("test")
+    displayButtonSet(search.searchCheck.checked)})
 
 const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event) => {
     if (event.target.tagName === 'BUTTON') {
@@ -45,6 +49,7 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'notice') =>  {
     });
     const selectButton = document.getElementById(`${selectedButtonId}`);
     selectButton.disabled = true;
+    console.log(selectButton)
 }
 
     
@@ -54,21 +59,22 @@ const searchDropdownmenu = () => {
 
     const boardCategory = document.createElement('div');
     const boardContent = document.createElement('div');
-
-    const categories = ['notice', 'free', 'QnA'];
+    boardCategory.classList.add('boardCategorySearchButtons');
+    boardContent.classList.add('boardContentSearchButtons')
+    const categories = [['searchNotice', '공지'], ['searchFree', '자유'], ['searchQnA', 'QnA']];
     categories.forEach(category => {
         const button = document.createElement('button');
-        button.id = category;
-        button.textContent = category;
+        button.id = category[0];
+        button.textContent = category[1];
         boardCategory.appendChild(button);
     });
 
     // Create buttons for boardContent
-    const contents = ['title', 'writer'];
+    const contents = [['searchTitle', '제목'], ['writer', '작성자']];
     contents.forEach(content => {
         const button = document.createElement('button');
-        button.id = content;
-        button.textContent = content;
+        button.id = content[0];
+        button.textContent = content[1];
         boardContent.appendChild(button);
     });
     wrap.classList.add('searchDetailButtons')
@@ -77,13 +83,6 @@ const searchDropdownmenu = () => {
     wrap.appendChild(boardContent);
 
     return wrap;
-}
-
-const searchDetaildropDown = (searchDetailCheck = false) => {
-    if (searchDetailCheck){
-        if (getCookie('session')){
-        }
-    }
 }
 
 // getBoardItem 함수
@@ -175,12 +174,22 @@ const init = async () => {
 
         addInfinityScrollEvent();
 
+        displayButtonSet();
         const Drop = searchDropdownmenu();
         Drop.classList.add('none');
-        searchDetail.appendChild(Drop);
-        searchDetailCheckBox.addEventListener('click', () => {
-            Drop.classList.toggle('none');
-            event.stopPropagation();
+        search.searchDetail.appendChild(Drop);
+        search.searchDetailCheckBox.addEventListener('change', () => {
+            if(search.searchDetailCheckBox.checked){
+                Drop.classList.toggle('none');
+                event.stopPropagation();    
+            }
+                   
+        });
+        window.addEventListener('click', e => {
+            const dropMenu = document.querySelector('.searchDetailButtons');
+            if (dropMenu && !dropMenu.classList.contains('none')) {
+                dropMenu.classList.add('none');
+            }
         });
 
     } catch (error) {
