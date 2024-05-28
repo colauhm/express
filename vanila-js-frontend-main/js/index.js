@@ -56,20 +56,9 @@ search.searchCheck.addEventListener('change', async () => {
 
 search.searchContent.addEventListener('change', () => {
     searchContent.searchText = search.searchContent.value;
-    const newItems = getBoardItem(0, 5, true, searchContent.boardContentType, searchContent.searchText)
+    const newItems = getBoardItem()
     setBoardItem(newItems, searchContent.boardCategory, true)
 })
-
-const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event) => {
-    if (event.target.tagName === 'BUTTON') {
-        const selectedButtonId = event.target.id;
-        selectedboardCategoryButtonSet(selectedButtonId, boardCategorySelectButton)
-        const boardList = await getBoardItem();
-        setBoardItem(boardList, selectedButtonId, true)
-        return selectedButtonId;
-    }
-}
-);
 
 const selectedboardCategoryButtonSet = (selectedButtonId = 'notice', buttons = boardCategorySelectButton) =>  {
     console.log(buttons)
@@ -81,25 +70,19 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'notice', buttons = b
     console.log(selectButton)
 }
 
-const searchDetailButtonSet = (container) => {
-    searchButton.boardCategorySearchContainer.addEventListener('click' , async (event) => {
-        if (event.target.tagName === 'BUTTON') {
-            const selectedButtonId = event.target.id;
-            selectedboardCategoryButtonSet(selectedButtonId, searchButton.boardCategorySearchButton)
-            const boardList = await getBoardItem();
-            setBoardItem(boardList, selectedButtonId, true)
-            return selectedButtonId;
-        }
-    })
-    searchButton.boardContentSearchContainer.addEventListener('click' , async (event) => {
-        if (event.target.tagName === 'BUTTON') {
-            const selectedButtonId = event.target.id;
-            selectedboardCategoryButtonSet(selectedButtonId, searchButton.boardContentSearchButton)
-            const boardList = await getBoardItem();
-            setBoardItem(boardList, selectedButtonId, true)
-            return selectedButtonId;
-        }
-    })
+const selectButtonHandler = async (event) => {
+    if (event.target.tagName === 'BUTTON') {
+        const selectedButtonId = event.target.id;
+        selectedboardCategoryButtonSet(selectedButtonId, searchButton.boardCategorySearchButton)
+        const boardList = await getBoardItem();
+        setBoardItem(boardList, selectedButtonId, true)
+        return selectedButtonId;
+    }
+}
+const boardCategory = boardCategorySelectContainer.addEventListener('click', selectButtonHandler);
+const searchDetailButtonSet = () => {
+    searchButton.boardCategorySearchContainer.addEventListener('click' , selectButtonHandler)
+    searchButton.boardContentSearchContainer.addEventListener('click' , selectButtonHandler)
 }
     
 
@@ -137,8 +120,14 @@ const searchDropdownmenu = () => {
 }
 
 // getBoardItem 함수
-const getBoardItem = async (offset = 0, limit = 5, search = false, boardContentType = 'all', searchContent = '') => {
-    const response = await getPosts(offset, limit, search, boardContentType, searchContent);
+const getBoardItem = async (searchContent = null, search = false, offset = 0, limit = 5) => {
+    let response;
+    if (!search){
+        response = await getPosts(offset, limit);
+    }
+    else{
+        response = await getPosts(offset, limit, searchContent.boardContentType, searchContent.searchText);
+    }
     if (!response.ok) {
         throw new Error('Failed to load post list.');
     }
@@ -186,7 +175,7 @@ const addInfinityScrollEvent = () => {
             isProcessing = true;
 
             try {
-                const newItems = await getBoardItem(offset, ITEMS_PER_LOAD, search.searchCheck.checked, searchContent.boardCategory, searchContent.searchText);
+                const newItems = await getBoardItem(searchContent, search.searchCheck.checked, offset, ITEMS_PER_LOAD);
                 if (!newItems || newItems.length === 0) {
                     isEnd = true;
                 } else {
