@@ -27,10 +27,14 @@ const displayButtonSet = (searchCheck = false) => {
     postButton.style.display = displayState;
     search.searchContent.style.display = searchDisplayState;
     search.searchDetailLabel.style.display = searchDisplayState;
+    search.searchDetail.style.display = searchDisplayState;
 }
 
-search.searchCheck.addEventListener('change', () => {console.log("test")
-    displayButtonSet(search.searchCheck.checked)})
+search.searchCheck.addEventListener('change', async () => {
+    displayButtonSet(search.searchCheck.checked)
+    const boardList = await getBoardItem();
+    setBoardItem(boardList);
+})
 
 const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event) => {
     if (event.target.tagName === 'BUTTON') {
@@ -86,8 +90,8 @@ const searchDropdownmenu = () => {
 }
 
 // getBoardItem 함수
-const getBoardItem = async (offset = 0, limit = 5) => {
-    const response = await getPosts(offset, limit);
+const getBoardItem = async (offset = 0, limit = 5, search = false, boardCategory = '', boardContent = '') => {
+    const response = await getPosts(offset, limit, search, boardCategory, boardContent);
     if (!response.ok) {
         throw new Error('Failed to load post list.');
     }
@@ -179,17 +183,11 @@ const init = async () => {
         Drop.classList.add('none');
         search.searchDetail.appendChild(Drop);
         search.searchDetailCheckBox.addEventListener('change', () => {
-            if(search.searchDetailCheckBox.checked){
-                Drop.classList.toggle('none');
-                event.stopPropagation();    
-            }
+
+            Drop.classList.toggle('none');
+            event.stopPropagation();    
+
                    
-        });
-        window.addEventListener('click', e => {
-            const dropMenu = document.querySelector('.searchDetailButtons');
-            if (dropMenu && !dropMenu.classList.contains('none')) {
-                dropMenu.classList.add('none');
-            }
         });
 
     } catch (error) {
