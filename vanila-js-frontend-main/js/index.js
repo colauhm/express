@@ -9,7 +9,17 @@ const SCROLL_THRESHOLD = 0.9;
 const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
 const boardCategorySelectContainer = document.querySelector('.boardCategory');
-const boardCategorySelectButtons = document.querySelectorAll('.boardCategoryButton');
+const boardCategorySelectButton = document.querySelectorAll('.boardCategoryButton');
+
+const searchButton = {
+    boardCategorySearchButton : null,
+    boardContentSearchButton : null,
+    boardCategorySearchContainer : null,
+    boardContentSearchContainer : null
+
+}
+
+
 const search = {
     searchContent : document.getElementById('searchContent'),
     searchCheck :document.getElementById('searchCheck'),
@@ -17,6 +27,14 @@ const search = {
     searchDetail : document.querySelector('.searchDetail'),
     searchDetailLabel : document.getElementById('searchDetailLabel')
 }
+
+const searchContent = {
+    boardCategory : 'all',
+    boardContentType : 'all',
+    searchText :''
+}
+
+
 
 const postButton = document.getElementById('writeLink');
 
@@ -33,13 +51,19 @@ const displayButtonSet = (searchCheck = false) => {
 search.searchCheck.addEventListener('change', async () => {
     displayButtonSet(search.searchCheck.checked)
     const boardList = await getBoardItem();
-    setBoardItem(boardList);
+    setBoardItem(boardList, 'all', true);
+})
+
+search.searchContent.addEventListener('change', () => {
+    searchContent.searchText = search.searchContent.value;
+    const newItems = getBoardItem(0, 5, true, searchContent.boardContentType, searchContent.searchText)
+    setBoardItem(newItems, searchContent.boardCategory, true)
 })
 
 const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event) => {
     if (event.target.tagName === 'BUTTON') {
         const selectedButtonId = event.target.id;
-        selectedboardCategoryButtonSet(selectedButtonId)
+        selectedboardCategoryButtonSet(selectedButtonId, boardCategorySelectButton)
         const boardList = await getBoardItem();
         setBoardItem(boardList, selectedButtonId, true)
         return selectedButtonId;
@@ -47,8 +71,9 @@ const boardCategory = boardCategorySelectContainer.addEventListener('click', asy
 }
 );
 
-const selectedboardCategoryButtonSet = (selectedButtonId = 'notice') =>  {
-    boardCategorySelectButtons.forEach(button => {
+const selectedboardCategoryButtonSet = (selectedButtonId = 'notice', buttons = boardCategorySelectButton) =>  {
+    console.log(buttons)
+    buttons.forEach(button => {
         button.disabled = false;
     });
     const selectButton = document.getElementById(`${selectedButtonId}`);
@@ -56,6 +81,26 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'notice') =>  {
     console.log(selectButton)
 }
 
+const searchDetailButtonSet = (container) => {
+    searchButton.boardCategorySearchContainer.addEventListener('click' , async (event) => {
+        if (event.target.tagName === 'BUTTON') {
+            const selectedButtonId = event.target.id;
+            selectedboardCategoryButtonSet(selectedButtonId, searchButton.boardCategorySearchButton)
+            const boardList = await getBoardItem();
+            setBoardItem(boardList, selectedButtonId, true)
+            return selectedButtonId;
+        }
+    })
+    searchButton.boardContentSearchContainer.addEventListener('click' , async (event) => {
+        if (event.target.tagName === 'BUTTON') {
+            const selectedButtonId = event.target.id;
+            selectedboardCategoryButtonSet(selectedButtonId, searchButton.boardContentSearchButton)
+            const boardList = await getBoardItem();
+            setBoardItem(boardList, selectedButtonId, true)
+            return selectedButtonId;
+        }
+    })
+}
     
 
 const searchDropdownmenu = () => {
@@ -69,6 +114,7 @@ const searchDropdownmenu = () => {
     categories.forEach(category => {
         const button = document.createElement('button');
         button.id = category[0];
+        button.classList.add('boardCategorySearchButton')
         button.textContent = category[1];
         boardCategory.appendChild(button);
     });
@@ -78,6 +124,7 @@ const searchDropdownmenu = () => {
     contents.forEach(content => {
         const button = document.createElement('button');
         button.id = content[0];
+        button.classList.add('boardContentSearchButton')
         button.textContent = content[1];
         boardContent.appendChild(button);
     });
@@ -90,8 +137,8 @@ const searchDropdownmenu = () => {
 }
 
 // getBoardItem 함수
-const getBoardItem = async (offset = 0, limit = 5, search = false, boardCategory = '', boardContent = '') => {
-    const response = await getPosts(offset, limit, search, boardCategory, boardContent);
+const getBoardItem = async (offset = 0, limit = 5, search = false, boardContentType = 'all', searchContent = '') => {
+    const response = await getPosts(offset, limit, search, boardContentType, searchContent);
     if (!response.ok) {
         throw new Error('Failed to load post list.');
     }
@@ -106,21 +153,21 @@ const setBoardItem = (boardData, selectedBoardCategory = 'notice', reset = false
         if (reset)
             boardList.innerHTML = '';
         const itemsHtml = boardData
-            .map(data =>
-                BoardItem(
-                    selectedBoardCategory,
-                    data.board_category,
-                    data.post_id,
-                    data.created_at,
-                    data.post_title,
-                    data.hits,
-                    data.profileImagePath,
-                    data.nickname,
-                    data.comment_count,
-                    data.like,
-                ),
-            )
-            .join('');
+        .map(data =>
+            BoardItem(
+                selectedBoardCategory,
+                data.board_category,
+                data.post_id,
+                data.created_at,
+                data.post_title,
+                data.hits,
+                data.profileImagePath,
+                data.nickname,
+                data.comment_count,
+                data.like,
+            ),
+        )
+        .join('');
         boardList.innerHTML += ` ${itemsHtml}`;
     }
 };
@@ -139,7 +186,7 @@ const addInfinityScrollEvent = () => {
             isProcessing = true;
 
             try {
-                const newItems = await getBoardItem(offset, ITEMS_PER_LOAD);
+                const newItems = await getBoardItem(offset, ITEMS_PER_LOAD, search.searchCheck.checked, searchContent.boardCategory, searchContent.searchText);
                 if (!newItems || newItems.length === 0) {
                     isEnd = true;
                 } else {
@@ -158,7 +205,7 @@ const addInfinityScrollEvent = () => {
 
 const init = async () => {
     try {
-        selectedboardCategoryButtonSet();
+        
         const data = await authCheck();
         if (data.status === HTTP_NOT_AUTHORIZED && boardCategory != 'notice') {
             window.location.href = '/html/login.html';
@@ -189,7 +236,12 @@ const init = async () => {
 
                    
         });
-
+        searchButton.boardCategorySearchButton = document.querySelectorAll('.boardCategorySearchButton');
+        searchButton.boardCategorySearchContainer = document.querySelector('.boardCategorySearchButtons');
+        searchButton.boardContentSearchButton = document.querySelectorAll('.boardContentSearchButton')
+        searchButton.boardContentSearchContainer = document.querySelector('.boardContentSearchButtons'); 
+        selectedboardCategoryButtonSet();
+        searchDetailButtonSet();
     } catch (error) {
         console.error('Initialization failed:', error);
     }
