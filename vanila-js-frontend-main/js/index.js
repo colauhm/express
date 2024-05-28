@@ -1,6 +1,6 @@
 import BoardItem from '../component/board/boardItem.js';
 import Header from '../component/header/header.js';
-import { authCheck, getServerUrl, prependChild } from '../utils/function.js';
+import { authCheck, getServerUrl, prependChild ,getCookie} from '../utils/function.js';
 import { getPosts } from '../api/indexRequest.js';
 
 const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
@@ -11,12 +11,22 @@ const ITEMS_PER_LOAD = 5;
 const boardCategorySelectContainer = document.querySelector('.boardCategory');
 const boardCategorySelectButtons = document.querySelectorAll('.boardCategoryButton');
 const searchCheck = document.getElementById('searchCheck');
+const searchDetailCheckBox = document.getElementById('searchDetail');
+const searchDetail = document.querySelector('.searchDetail');
+const postButton = document.getElementById('writeLink');
+const search = document.querySelector('.search')
+
+
 
 searchCheck.addEventListener('change',() => {
-    console.log(boardCategorySelectContainer)
-
-    boardCategorySelectContainer.style.display = searchCheck.checked ? 'none' : 'flex';
+    const displayState = searchCheck.checked ? 'none' : 'flex';
+    boardCategorySelectContainer.style.display = displayState;
+    postButton.style.display = displayState;
 })
+// searchDetailCheckBox.addEventListener('change', () => {
+//     console.log("check")
+//     searchDetaildropDown(searchDetailCheckBox.checked);
+// })
 
 const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event) => {
     if (event.target.tagName === 'BUTTON') {
@@ -39,9 +49,42 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'notice') =>  {
 
     
 
+const searchDropdownmenu = () => {
+    const wrap = document.createElement('div');
 
+    const boardCategory = document.createElement('div');
+    const boardContent = document.createElement('div');
 
+    const categories = ['notice', 'free', 'QnA'];
+    categories.forEach(category => {
+        const button = document.createElement('button');
+        button.id = category;
+        button.textContent = category;
+        boardCategory.appendChild(button);
+    });
 
+    // Create buttons for boardContent
+    const contents = ['title', 'writer'];
+    contents.forEach(content => {
+        const button = document.createElement('button');
+        button.id = content;
+        button.textContent = content;
+        boardContent.appendChild(button);
+    });
+    wrap.classList.add('searchDetailButtons')
+    // Append boardCategory and boardContent to wrap
+    wrap.appendChild(boardCategory);
+    wrap.appendChild(boardContent);
+
+    return wrap;
+}
+
+const searchDetaildropDown = (searchDetailCheck = false) => {
+    if (searchDetailCheck){
+        if (getCookie('session')){
+        }
+    }
+}
 
 // getBoardItem 함수
 const getBoardItem = async (offset = 0, limit = 5) => {
@@ -131,6 +174,15 @@ const init = async () => {
         setBoardItem(boardList);
 
         addInfinityScrollEvent();
+
+        const Drop = searchDropdownmenu();
+        Drop.classList.add('none');
+        searchDetail.appendChild(Drop);
+        searchDetailCheckBox.addEventListener('click', () => {
+            Drop.classList.toggle('none');
+            event.stopPropagation();
+        });
+
     } catch (error) {
         console.error('Initialization failed:', error);
     }

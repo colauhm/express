@@ -12,23 +12,26 @@
 </head>
 <body>
 <section class="wrap">
-    <div class="userAction">
-        <div class="write">
-            <a href="./board-write.html" id="writeLink">게시글 작성</a>
-        </div>
-        <div class="search">
-            <input type="checkbox" id="searchCheck">
-            <label for="searchCheck">검색</label>
-            <div class="inputBox">
-                <input
-                type="text"
-                id="searchContent"
-                placeholder="검색할 내용을 입력해 주세요"
-                 />
-            </div>
-        </div>
+    <div class="write">
+        <a href="./board-write.html" id="writeLink">게시글 작성</a>
     </div>
     
+
+    <div class="search">
+        
+        <div class="inputBox">
+            <input
+            type="text"
+            id="searchContent"
+            placeholder="검색할 내용을 입력해 주세요"
+             />
+        </div>
+        <input type="checkbox" id="searchCheck">
+        <label for="searchCheck">검색</label>
+        <input type="checkbox" id="searchDetail">
+        <label for="searchDetail">상세검색</label>
+    </div>
+    <div class="searchDetail"></div>
     <div class="boardCategory">
         <button class="boardCategoryButton" id="notice">공지</button>
         <button class="boardCategoryButton" id="free">자유</button>
