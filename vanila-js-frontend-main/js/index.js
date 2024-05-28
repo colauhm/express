@@ -29,6 +29,7 @@ const search = {
 }
 
 const searchContent = {
+    search : false,
     boardCategory : 'all',
     boardContentType : 'all',
     searchText :''
@@ -50,13 +51,14 @@ const displayButtonSet = (searchCheck = false) => {
 
 search.searchCheck.addEventListener('change', async () => {
     displayButtonSet(search.searchCheck.checked)
-    const boardList = await getBoardItem();
-    setBoardItem(boardList, 'all', true);
+    searchContent.search = search.searchCheck.checked;
+    const boardList = await getBoardItem(searchContent);
+    setBoardItem(boardList, searchContent.boardCategory, true);
 })
 
 search.searchContent.addEventListener('change', () => {
     searchContent.searchText = search.searchContent.value;
-    const newItems = getBoardItem()
+    const newItems = getBoardItem(searchContent)
     setBoardItem(newItems, searchContent.boardCategory, true)
 })
 
@@ -120,14 +122,11 @@ const searchDropdownmenu = () => {
 }
 
 // getBoardItem 함수
-const getBoardItem = async (searchContent = null, search = false, offset = 0, limit = 5) => {
-    let response;
-    if (!search){
-        response = await getPosts(offset, limit);
-    }
-    else{
-        response = await getPosts(offset, limit, searchContent.boardContentType, searchContent.searchText);
-    }
+const getBoardItem = async (searchContent = null, offset = 0, limit = 5) => {
+
+
+    const response = await getPosts(offset, limit, searchContent.search,searchContent.boardContentType, searchContent.searchText);
+
     if (!response.ok) {
         throw new Error('Failed to load post list.');
     }

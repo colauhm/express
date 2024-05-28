@@ -2,7 +2,7 @@ import * as dbConnect from '../database/index.js';
 
 // 게시글 목록 조회
 export const getPosts = async (requestData, response) => {
-    const { offset, limit } = requestData;
+    const { offset, limit , search, boardContentType, searchText } = requestData;
     const sql = `
     SELECT
         post_table.board_category,
