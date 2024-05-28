@@ -10,6 +10,13 @@ const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
 const boardCategorySelectContainer = document.querySelector('.boardCategory');
 const boardCategorySelectButtons = document.querySelectorAll('.boardCategoryButton');
+const searchCheck = document.getElementById('searchCheck');
+
+searchCheck.addEventListener('change',() => {
+    console.log(boardCategorySelectContainer)
+
+    boardCategorySelectContainer.style.display = searchCheck.checked ? 'none' : 'flex';
+})
 
 const boardCategory = boardCategorySelectContainer.addEventListener('click', async (event) => {
     if (event.target.tagName === 'BUTTON') {
