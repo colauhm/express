@@ -1,8 +1,10 @@
 import { getServerUrl, getCookie } from '../utils/function.js';
 
 export const getPosts = (offset, limit, search, boardContentType, searchText) => {
+    console.log( `${getServerUrl()}/posts?offset=${offset}&limit=${limit}&search=${search}&boardContentType=${boardContentType}&searchText=${searchText}`)
     const result = fetch(
         `${getServerUrl()}/posts?offset=${offset}&limit=${limit}&search=${search}&boardContentType=${boardContentType}&searchText=${searchText}`,
+       
         {
             headers: {
                 session: getCookie('session'),

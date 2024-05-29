@@ -11,6 +11,7 @@ const BoardItem = (
     writer,
     commentCount,
     like,
+    search
 ) => {
     // 파라미터 값이 없으면 리턴
     if (
@@ -24,6 +25,15 @@ const BoardItem = (
     ) {
         return;
     }
+    if (search){
+        const boardType = {
+            searchNotice : 'notice',
+            searchFree : 'free',
+            searchQnA : 'QnA'
+        }
+        selectedButtonId = boardType[selectedButtonId];
+    }
+    
     // 날짜 포맷 변경 YYYY-MM-DD hh:mm:ss
     const dateObj = new Date(date);
     const year = dateObj.getFullYear();

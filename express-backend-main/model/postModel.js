@@ -3,7 +3,25 @@ import * as dbConnect from '../database/index.js';
 // 게시글 목록 조회
 export const getPosts = async (requestData, response) => {
     const { offset, limit , search, boardContentType, searchText } = requestData;
-    const sql = `
+    let searchContentType;
+
+    // 작은 따옴표를 제거합니다.
+    const sanitizedBoardContentType = boardContentType.replace(/'/g, "");
+
+    if (sanitizedBoardContentType !== 'all') {
+        const contentTypes = {
+            searchTitle: 'post_table.post_title',
+            searchWriter: 'post_table.nickname',
+            searchContent: 'post_table.post_content'
+        };
+        searchContentType = contentTypes[sanitizedBoardContentType];
+    } else {
+        searchContentType = 'all';
+    }
+
+
+
+    let sql = `
     SELECT
         post_table.board_category,
         post_table.post_id,
@@ -35,11 +53,31 @@ export const getPosts = async (requestData, response) => {
             LEFT JOIN user_table ON post_table.user_id = user_table.user_id
             LEFT JOIN file_table ON user_table.file_id = file_table.file_id
     WHERE post_table.deleted_at IS NULL
-    ORDER BY post_table.created_at DESC
-    LIMIT ${limit} OFFSET ${offset};
+    
     `;
+    if (search) {
+        if (searchText){
+            if (searchContentType != 'all') {
+                sql += `
+                AND (
+                    ${searchContentType} LIKE '%${searchText}%'
+                )
+                `;
+            } else {
+                sql += `
+                AND (
+                    post_table.post_title LIKE '%${searchText}%'
+                    OR post_table.post_content LIKE '%${searchText}%'
+                    OR post_table.nickname LIKE '%${searchText}%'
+                )
+                `;
+            }
+        }
+        
+    }
+    sql += `ORDER BY post_table.created_at DESC
+    LIMIT ${limit} OFFSET ${offset};`
     const results = await dbConnect.query(sql, response);
-
     if (!results) return null;
     return results;
 };
