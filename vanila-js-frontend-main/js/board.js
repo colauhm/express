@@ -33,7 +33,14 @@ const getBoardDetail = async postId => {
     const data = await response.json();
     return data.data[0];
 };
+const getCheckLike = async postId => {
+    const response = await getPost(postId);
+    if (!response.ok)
+        return new Error('게시글 정보를 가져오는데 실패하였습니다.');
 
+    const data = await response.json();
+    return data.data[0];
+}
 const setBoardDetail = data => {
     // 헤드 정보
     const titleElement = document.querySelector('.title');
@@ -165,6 +172,10 @@ const inputComment = async () => {
     }
 };
 
+const clickLikeElement = (boardId, userId) => {
+
+}
+
 const init = async () => {
     try {
         const myInfoResult = await authCheck();
@@ -177,6 +188,7 @@ const init = async () => {
         const textareaElement = document.querySelector(
             '.commentInputWrap textarea',
         );
+        
         textareaElement.addEventListener('input', inputComment);
         commentBtnElement.addEventListener('click', addComment);
         commentBtnElement.disabled = true;
@@ -200,7 +212,9 @@ const init = async () => {
             
         }
         setBoardDetail(pageData);
-
+        getCheckLike(pageId)
+        // const likeElemtent = document.querySelector('.like');
+        // likeElemtent.addEventListener('click');
         getBoardComment(pageId).then(data => setBoardComment(data, myInfo));
     } catch (error) {
         console.error(error);

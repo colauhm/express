@@ -1,5 +1,16 @@
 import { getServerUrl, getCookie } from '../utils/function.js';
 
+export const getLike = postId => {
+    const result = fetch(`${getServerUrl()}/posts/like/${postId}`, {
+        headers: {
+            session: getCookie('session'),
+            userid: getCookie('userId'),
+        },
+        noCORS: true,
+    });
+    return result;
+};
+
 export const getPost = postId => {
     const result = fetch(`${getServerUrl()}/posts/${postId}`, {
         headers: {
