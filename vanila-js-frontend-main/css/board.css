@@ -34,10 +34,13 @@
 .head .writerWrap {
     display: flex;
     align-items: center;
-    column-gap: 12px;
+    column-gap: 5px;
 }
 .head .mod {
     margin-left: auto;
+    display: flex;
+    width: 120px;
+    height: 35px;
 }
 .head .mod button {
     padding: 2px 12px;
@@ -236,4 +239,45 @@
     display: flex;
     flex-direction: column;
     row-gap: 32px;
+}
+.like{
+    padding: 12px 12px;
+    border-radius: 8px;
+    border: 1px solid #aca0eb;
+    background-color: transparent;
+    cursor: pointer;
+    line-height: 1.56em;
+    color: #000000;
+}
+.heart {
+    width: 10px;
+    height: 10px;
+    background: #ea2027;
+    position: relative;
+    transform: rotate(45deg);
+  }
+.heart::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: -50%;
+    border-radius: 50%;
+    background: #ea2027;
+}
+.heart::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: -50%;
+    border-radius: 50%;
+    background: #ea2027;
+}
+
+.unCheck{
+    background:#848484
+}
+.unCheck ::before{
+    background:#848484
 }
