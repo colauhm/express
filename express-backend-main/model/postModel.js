@@ -55,25 +55,28 @@ export const getPosts = async (requestData, response) => {
     WHERE post_table.deleted_at IS NULL
     
     `;
-    if (search) {
-        if (searchText){
-            if (searchContentType != 'all') {
-                sql += `
-                AND (
-                    ${searchContentType} LIKE '%${searchText}%'
-                )
-                `;
-            } else {
-                sql += `
-                AND (
-                    post_table.post_title LIKE '%${searchText}%'
-                    OR post_table.post_content LIKE '%${searchText}%'
-                    OR post_table.nickname LIKE '%${searchText}%'
-                )
-                `;
-            }
+
+    if (search == 'true') {
+
+        if(searchText == ''){
+            return []
         }
-        
+        if (searchContentType != 'all') {
+            sql += `
+            AND (
+                ${searchContentType} LIKE '%${searchText}%'
+            )
+            `;
+        } else {
+            sql += `
+            AND (
+                post_table.post_title LIKE '%${searchText}%'
+                OR post_table.post_content LIKE '%${searchText}%'
+                OR post_table.nickname LIKE '%${searchText}%'
+            )
+            `;
+        }
+
     }
     sql += `ORDER BY post_table.created_at DESC
     LIMIT ${limit} OFFSET ${offset};`
