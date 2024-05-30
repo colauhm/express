@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import * as postModel from '../model/postModel.js';
+import { request, response } from 'express';
 
 /**
  * 게시글 작성
@@ -10,6 +11,16 @@ import * as postModel from '../model/postModel.js';
  */
 
 // 게시글 작성
+export const addLike = async (request, response) => {
+    const { postId } = request.params.post_id;
+    const userId = request.headers.userid;
+    const requestData = {
+        postId : postId, 
+        userId : userId
+    };
+    const results = await postModel.addLike(requestData, response);
+    return results;
+}
 export const writePost = async (request, response) => {
     try {
         if (request.attachFilePath === undefined) request.attachFilePath = null;
@@ -173,7 +184,43 @@ export const getPosts = async (request, response) => {
     }
 };
 
-// 게시글 상세 조회
+export const getLike = async (request, response) => {
+    try {
+        if (!request.params.post_id)
+            return response.status(400).json({
+                status: 400,
+                message: 'invalid_post_id',
+                data: null,
+            });
+
+        const postId = request.params.post_id;
+
+        const requestData = {
+            postId,
+        };
+        const results = await postModel.getLike(requestData, response);
+
+        if (!results || results === null)
+            return response.status(404).json({
+                status: 404,
+                message: 'not_a_single_post',
+                data: null,
+            });
+
+        return response.status(200).json({
+            status: 200,
+            message: null,
+            data: results,
+        });
+    } catch (error) {
+        console.error(error);
+        return response.status(500).json({
+            status: 500,
+            message: 'internal_server_error',
+            data: null,
+        });
+    }
+}
 export const getPost = async (request, response) => {
     try {
         if (!request.params.post_id)
@@ -266,7 +313,16 @@ export const updatePost = async (request, response) => {
         });
     }
 };
+export const deleteLike = async (request, response) => {
+    const postId = request.params.post_id;
+    const userId = request.headers.userid;
 
+    const requestData = {
+        postId : postId,
+        userId : userId
+    }
+    const result = await postModel.deleteLike(requestData, response);
+}
 // 게시글 삭제
 export const softDeletePost = async (request, response) => {
     try {

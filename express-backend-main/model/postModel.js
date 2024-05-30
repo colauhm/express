@@ -1,3 +1,4 @@
+import { response } from 'express';
 import * as dbConnect from '../database/index.js';
 
 // 게시글 목록 조회
@@ -84,7 +85,22 @@ export const getPosts = async (requestData, response) => {
     if (!results) return null;
     return results;
 };
+export const getLike = async (requestData, response) => {
+    const { postId } = requestData;
 
+    const sql = `
+    SELECT
+        like_table.user_id,
+        like_table.post_id
+    FROM
+        like_table
+    WHERE
+        like_table.post_id = ${postId};
+
+    `;
+    const results = await dbConnect.query(sql, response);
+    return results;
+}
 // 게시글 상세 조회
 export const getPost = async (requestData, response) => {
     const { postId } = requestData;
@@ -156,6 +172,17 @@ export const getPost = async (requestData, response) => {
 
     return results;
 };
+
+export const addLike = async (requestData, response) => {
+    const { postId, userId } = requestData;
+    const addLikeSql = `
+    INSERT INTO like_table
+    (user_id, post_id)
+    VALUES (${userId}, ${postId})
+    `;
+    const result = await dbConnect.query(addLikeSql, response);
+    return result
+}
 
 // 게시글 작성 (일반 게시글)
 export const writePlainPost = async (requestData, response) => {
@@ -254,6 +281,18 @@ export const updatePost = async (requestData, response) => {
 
     return { ...updatePostResults, post_id: postId };
 };
+
+export const deleteLike = async (requestData, response) => {
+    const { postId, userId } = requestData;
+
+    const sql = `
+    DELETE FROM like_table
+    WHERE user_id = ${userId} AND post_id = ${postId};
+    `;
+
+    const result = await dbConnect.query(sql, response);
+    return result;
+}
 
 export const softDeletePost = async (requestData, response) => {
     const { postId } = requestData;
