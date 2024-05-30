@@ -17,6 +17,14 @@ const search = {
     searchDetail : document.querySelector('.searchDetail'),
     searchDetailLabel : document.getElementById('searchDetailLabel')
 }
+const searchContent = {
+    search : false,
+    boardCategory : 'all',
+    boardContentType : 'all',
+    searchText :''
+}
+
+
 const searchDropdownmenu = () => {
     const wrap = document.createElement('div');
 
@@ -54,37 +62,30 @@ const searchDropdownmenu = () => {
 const Drop = searchDropdownmenu();
 Drop.classList.add('none');
 search.searchDetail.appendChild(Drop);
-search.searchCheck.addEventListener('change', () => {
-
+const searchButton = {
+    boardCategorySearchButton : document.querySelectorAll('.boardCategorySearchButton'),
+    boardCategorySearchContainer : document.querySelector('.boardCategorySearchButtons'),
+    boardContentSearchButton : document.querySelectorAll('.boardContentSearchButton'),
+    boardContentSearchContainer : document.querySelector('.boardContentSearchButtons'), 
+}
+search.searchDetailCheckBox.addEventListener('change', () => {
+    if (search.searchDetailCheckBox.checked){
+        search.searchDetailLabel.innerHTML = '전체검색';
+        document.getElementById('searchNotice').click();
+        document.getElementById('searchTitle').click();
+       
+    }
+    else{
+        search.searchDetailLabel.innerHTML = '상세검색';
+        searchContent.boardCategory = 'all';
+        searchContent.boardContentType = 'all';
+    }
     Drop.classList.toggle('none');
     event.stopPropagation();    
-
-           
 });
-search.searchDetailCheckBox.click();
 
-const searchButton = {
-    boardCategorySearchButton : null,
-    boardContentSearchButton : null,
-    boardCategorySearchContainer : null,
-    boardContentSearchContainer : null
 
-}
 let selectBoardCategory;
-
-searchButton.boardCategorySearchButton = document.querySelectorAll('.boardCategorySearchButton');
-searchButton.boardCategorySearchContainer = document.querySelector('.boardCategorySearchButtons');
-searchButton.boardContentSearchButton = document.querySelectorAll('.boardContentSearchButton')
-searchButton.boardContentSearchContainer = document.querySelector('.boardContentSearchButtons'); 
-
-
-const searchContent = {
-    search : false,
-    boardCategory : 'all',
-    boardContentType : 'all',
-    searchText :''
-}
-
 
 
 const postButton = document.getElementById('writeLink');
