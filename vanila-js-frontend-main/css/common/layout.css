@@ -22,16 +22,20 @@ body {
     background-color: #fff;
 }
 
-.boardCategory button, .bordSortButton button{
-    width: 33.3%;
+.boardCategory button, .boardSortButton button{
+    width: 34%;
     padding: 12px 12px;
     color: #000;
     font-size: 15px;
     background-color: #fff;
     border: 1px solid #fff;
+    transition: background-color 0.5s;
 }
 .boardCategory button:disabled{
-    background-color: #f1eeff;
+    background-color: #e2dcff;
+}
+.boardCategory button:hover{
+    background-color: #dddddd;
 }
 
 .wrap {
