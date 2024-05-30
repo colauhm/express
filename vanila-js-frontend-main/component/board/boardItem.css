@@ -4,11 +4,14 @@
     width: 100%;
 
     padding: 16px 0;
-    border: 2px solid rgb(0, 0, 0);
+    border: 1px solid rgb(255, 255, 255);
     border-radius: 8px;
 
     cursor: pointer;
-    box-shadow: 3px 4px 4px 0px #cccccc40;
+    box-shadow: 13px 13px 14px 5px #00000040;
+}
+.boardItem:hover {
+
 }
 
 .boardItem .date {
@@ -44,9 +47,9 @@
     border-bottom: 1px solid gray;
 }
 
-.boardItem .info h3,
+ .info h3,
 .boardItem .info b {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 200;
     line-height: 17px;
     letter-spacing: -0.02em;

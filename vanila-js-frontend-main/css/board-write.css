@@ -1,6 +1,9 @@
 @import url('./common/layout.css');
 @import url('../component/header/header.css');
-
+.boardCategory{
+    display: flex;
+    width: 100%;
+}
 .wrap {
     width: 100%;
     padding-left: 16px;

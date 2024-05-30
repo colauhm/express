@@ -2,7 +2,6 @@ import BoardItem from '../component/board/boardItem.js';
 import Header from '../component/header/header.js';
 import { authCheck, getServerUrl, prependChild ,getCookie} from '../utils/function.js';
 import { getPosts } from '../api/indexRequest.js';
-import { getLike } from '../api/boardRequest.js';
 
 const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
 const HTTP_NOT_AUTHORIZED = 401;
@@ -24,7 +23,10 @@ const searchContent = {
     boardContentType : 'all',
     searchText :''
 }
-
+const boardSort = {
+    container : document.querySelector('.bordSortButton'),
+    buttons : document.querySelectorAll('.sortButton') 
+}
 
 const searchDropdownmenu = () => {
     const wrap = document.createElement('div');
@@ -157,10 +159,10 @@ const searchDetailButtonSet = () => {
 
 
 // getBoardItem 함수
-const getBoardItem = async (searchContent, offset = 0, limit = 5) => {
+const getBoardItem = async (searchContent, sortType ='time', offset = 0, limit = 5) => {
 
     console.log(searchContent)
-    const response = await getPosts(offset, limit, searchContent.search, searchContent.boardContentType, searchContent.searchText);
+    const response = await getPosts(offset, limit, searchContent.search, searchContent.boardContentType, searchContent.searchText, sortType);
 
     if (!response.ok) {
         throw new Error('Failed to load post list.');

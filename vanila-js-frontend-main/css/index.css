@@ -3,19 +3,20 @@
 @import url('../component/header/header.css');
 
 label{
-    border: 2px solid rgb(0, 0, 0);
+    border: 1px solid rgb(220 220 220);
     padding: 13px 12px;
     border-radius: 8px;
     color: #000;
     font-size: 15px;
+    box-shadow: 0px 3px 0px 0px #00000040;
 }
 
 .boardList {
-    width: 100%;
+    width: 90%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    row-gap: 16px;
+    row-gap: 30px;
 }
 
 .write {
@@ -24,7 +25,6 @@ label{
     align-items: flex-start; /* 중앙 정렬에서 시작 정렬로 변경 */
     justify-content: center;
     row-gap: 32px;
-    padding: 40px 0 24px 0;
     width: 100%; /* .write 영역이 부모 컨테이너의 전체 너비를 차지하도록 설정 */
 }
 
@@ -80,16 +80,16 @@ input[type="checkbox" i] {
     font-size: 12px;
 }
 
-.searchDetail .searchDetailButtons {
+ .searchDetailButtons {
     position: absolute;
-    top: 235px;
-    right: -33%;
+    top: 165px;
+    right: -50%;
     display: flex;
     flex-direction: column;
-    width: 181px;
+    width: 212px;
     background-color: #fff;
     border-radius: 4px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: -4px 20px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .inputBox input{
@@ -100,12 +100,19 @@ input[type="checkbox" i] {
     background-color: transparent;
 }
 .searchDetail button{
-    padding: 5px 12px;;
+    padding: 12px 12px;;
     color: #000;
-    font-size: 11px;
+    font-size: 15px;
     width: 33.3%;
-    height: 100%;
+    border: 1px solid white;
+    background-color: #fff;
 }
 .searchDetail button:disabled{
-    background-color:rgb(149, 149, 149);
+    background-color: #f1eeff;
+}
+.boardCategory{
+    width: 100%;
+}
+.boardCategory button{
+    width: 33.3%;
 }
