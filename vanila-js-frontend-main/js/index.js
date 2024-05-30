@@ -2,6 +2,7 @@ import BoardItem from '../component/board/boardItem.js';
 import Header from '../component/header/header.js';
 import { authCheck, getServerUrl, prependChild ,getCookie} from '../utils/function.js';
 import { getPosts } from '../api/indexRequest.js';
+import { getLike } from '../api/boardRequest.js';
 
 const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
 const HTTP_NOT_AUTHORIZED = 401;

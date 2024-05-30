@@ -173,10 +173,23 @@ const inputComment = async () => {
         commentBtnElement.style.backgroundColor = '#7F6AEE';
     }
 };
+const pageId = getQueryString('id');
 
+        
 const clickLikeElement = async (boardId) => {
-    await addLike(boardId)
-}
+    const likeInfo = await getLikeInfo(pageId);
+    console.log(likeInfo)
+    if(likeInfo != ''){
+        await deleteLike(boardId)
+    }
+    else{
+        await addLike(boardId);
+    } 
+}   
+const likeElemtent = document.querySelector('.like');
+likeElemtent.addEventListener('click', () => {
+    clickLikeElement(pageId)
+});
 
 const init = async () => {
     try {
@@ -215,9 +228,6 @@ const init = async () => {
             
         }
         const likeInfo = await getLikeInfo(pageId);
-        console.log(likeInfo)
-        const likeElemtent = document.querySelector('.like');
-        likeElemtent.addEventListener('click',  clickLikeElement(pageId));
         setBoardDetail(pageData);
         getBoardComment(pageId).then(data => setBoardComment(data, myInfo));
     } catch (error) {

@@ -325,6 +325,9 @@ export const deleteLike = async (request, response) => {
         userId : userId
     }
     const result = await postModel.deleteLike(requestData, response);
+    console.log("result")
+    console.log(result)
+    return(result)
 }
 // 게시글 삭제
 export const softDeletePost = async (request, response) => {
