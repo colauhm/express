@@ -31,10 +31,10 @@ body {
     border: 1px solid #fff;
     transition: background-color 0.5s;
 }
-.boardCategory button:disabled{
+.boardCategory button:disabled, .boardSortButton button:disabled{
     background-color: #e2dcff;
 }
-.boardCategory button:hover{
+.boardCategory button:hover, .boardSortButton button:hover{
     background-color: #dddddd;
 }
 

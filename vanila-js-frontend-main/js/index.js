@@ -10,6 +10,7 @@ const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
 const boardCategorySelectContainer = document.querySelector('.boardCategory');
 const boardCategorySelectButton = document.querySelectorAll('.boardCategoryButton');
+
 const search = {
     searchContent : document.getElementById('searchText'),
     searchCheck :document.getElementById('searchCheck'),
@@ -25,8 +26,10 @@ const searchContent = {
 }
 const boardSort = {
     container : document.querySelector('.bordSortButton'),
-    buttons : document.querySelectorAll('.sortButton') 
+    buttons : document.querySelectorAll('.sortButton'),
+    sortType : 'time'
 }
+
 
 const searchDropdownmenu = () => {
     const wrap = document.createElement('div');
@@ -110,7 +113,7 @@ search.searchCheck.addEventListener('change', async () => {
         searchContent.searchText = '';
         searchContent.boardCategory = selectBoardCategory;
     }
-    const boardList = await getBoardItem(searchContent);
+    const boardList = await getBoardItem(searchConten);
     setBoardItem(boardList, searchContent.boardCategory, true);
 })
 
@@ -129,30 +132,36 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'notice', buttons = b
     selectButton.disabled = true;
 }
 
-const selectButtonHandler = async (boardCategory = true, search = false, event) => {
+const selectButtonHandler = async (buttonType, search, event) => {
     console.log(event)
     if (event.target.tagName === 'BUTTON') {
         const selectedButtonId = event.target.id;
-        searchContent.boardCategory = search && boardCategory ? selectedButtonId : searchContent.boardCategory;
-        searchContent.boardContentType = search && !boardCategory ? selectedButtonId : searchContent.boardContentType; 
-        selectBoardCategory = !search && boardCategory ? selectedButtonId : selectBoardCategory;
-        const category = search ? searchContent.boardCategory : selectBoardCategory;
-        selectedboardCategoryButtonSet(selectedButtonId, search ? (boardCategory ? searchButton.boardCategorySearchButton : searchButton.boardContentSearchButton) : boardCategorySelectButton);
-        const boardList = await getBoardItem(searchContent);
+        boardSort.sortType = buttonType == 'sortType' ? selectedButtonId : boardSort.sortType;
+        searchContent.boardCategory = search && buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardCategory;
+        searchContent.boardContentType = search && !buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardContentType; 
+        selectBoardCategory = !search && buttonType =='boardCategory' ? selectedButtonId : selectBoardCategory;
+        const category = search ? searchContent.buttonType : selectBoardCategory;
+        if (buttonType == 'sortType'){
+            selectedboardCategoryButtonSet(selectedButtonId, boardSort.buttons)
+        }
+        else{
+            selectedboardCategoryButtonSet(selectedButtonId, search ? (buttonType == 'boardCategory' ? searchButton.boardCategorySearchButton : searchButton.boardContentSearchButton) : boardCategorySelectButton);
+        }
+        
+        const boardList = await getBoardItem(searchContent, boardSort.sortType);
         setBoardItem(boardList, category, true);
-       
         return selectedButtonId;
     }
 }
 
 // 이벤트 리스너에 함수 호출이 아니라 함수 자체를 전달합니다.
-boardCategorySelectContainer.addEventListener('click', (event) => selectButtonHandler(true, false, event));
-
+boardCategorySelectContainer.addEventListener('click', (event) => selectButtonHandler('boardCategory', false, event));
+boardSort.container.addEventListener('click', (event => selectButtonHandler('sortType', false, event)))
 const searchDetailButtonSet = () => {
     // 이벤트 리스너에 함수 호출이 아니라 함수 자체를 전달합니다.
-    searchButton.boardCategorySearchContainer.addEventListener('click', (event) => selectButtonHandler(true, true, event));
+    searchButton.boardCategorySearchContainer.addEventListener('click', (event) => selectButtonHandler('boardCategroy', true, event));
     // 이벤트 리스너에 함수 호출이 아니라 함수 자체를 전달합니다.
-    searchButton.boardContentSearchContainer.addEventListener('click', (event) => selectButtonHandler(false, true, event));
+    searchButton.boardContentSearchContainer.addEventListener('click', (event) => selectButtonHandler('boardContent', true, event));
 }
 
     
