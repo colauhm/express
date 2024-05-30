@@ -192,6 +192,15 @@ export const addLike = async (requestData, response) => {
     VALUES (${userId}, ${postId})
     `;
     const result = await dbConnect.query(addLikeSql, response);
+
+    const addLikeCountSql = `
+    UPDATE post_table
+    SET \`like\` = \`like\` + 1
+    WHERE post_id = ${postId};
+    `;
+
+    await dbConnect.query(addLikeCountSql, response);
+
     return result
 }
 
@@ -302,6 +311,15 @@ export const deleteLike = async (requestData, response) => {
     `;
 
     const result = await dbConnect.query(sql, response);
+
+    
+    const reduceLikeCountSql = `
+    UPDATE post_table
+    SET \`like\` = \`like\` - 1
+    WHERE post_id = ${postId};
+    `;
+
+    await dbConnect.query(reduceLikeCountSql, response);
     return result;
 }
 
