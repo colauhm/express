@@ -82,7 +82,8 @@ const setBoardModify = async (data, myInfo) => {
     if (myInfo.idx === data.writerId) {
         const modifyElement = document.querySelector('.hidden');
         modifyElement.classList.remove('hidden');
-
+        const likeElemtent = document.querySelector('.like');
+        likeElemtent.classList.add('none');
         const modifyBtnElement = document.querySelector('#deleteBtn');
         const postId = getQueryString('id');
         modifyBtnElement.addEventListener('click', () => {
@@ -196,6 +197,7 @@ const init = async () => {
         const pageData = await getBoardDetail(pageId);
         if (parseInt(pageData.user_id, 10) === parseInt(myInfo.userId, 10)) {
             setBoardModify(pageData, myInfo);
+            
         }
         setBoardDetail(pageData);
 
