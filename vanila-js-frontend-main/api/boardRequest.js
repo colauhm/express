@@ -10,7 +10,28 @@ export const getLike = postId => {
     });
     return result;
 };
-
+export const addLike = postId => {
+    const result = fetch(`${getServerUrl()}/posts/like/${postId}`, {
+        method: 'POST',
+        headers: {
+            session: getCookie('session'),
+            userid: getCookie('userId'),
+        },
+        noCORS: true,
+    });
+    return result;
+};
+export const deleteLike = postId => {
+    const result = fetch(`${getServerUrl()}/posts/like/${postId}`, {
+        method: 'DELETE',
+        headers: {
+            session: getCookie('session'),
+            userid: getCookie('userId'),
+        },
+        noCORS: true,
+    });
+    return result;
+};
 export const getPost = postId => {
     const result = fetch(`${getServerUrl()}/posts/${postId}`, {
         headers: {
