@@ -151,14 +151,15 @@ export const getPosts = async (request, response) => {
                 data: null,
             });
 
-        const { offset, limit , search, boardContentType, searchText} = request.query;
+        const { offset, limit , search, boardContentType, searchText, sortType} = request.query;
 
         const requestData = {
             offset,
             limit,
             search,
             boardContentType,
-            searchText
+            searchText,
+            sortType
         };
         const results = await postModel.getPosts(requestData, response);
 

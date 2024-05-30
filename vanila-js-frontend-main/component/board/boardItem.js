@@ -13,6 +13,7 @@ const BoardItem = (
     like,
     search
 ) => {
+
     // 파라미터 값이 없으면 리턴
     if (
         !date ||

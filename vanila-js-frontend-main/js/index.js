@@ -25,7 +25,7 @@ const searchContent = {
     searchText :''
 }
 const boardSort = {
-    container : document.querySelector('.bordSortButton'),
+    container : document.querySelector('.boardSortButton'),
     buttons : document.querySelectorAll('.sortButton'),
     sortType : 'time'
 }
@@ -113,55 +113,63 @@ search.searchCheck.addEventListener('change', async () => {
         searchContent.searchText = '';
         searchContent.boardCategory = selectBoardCategory;
     }
-    const boardList = await getBoardItem(searchConten);
+    const boardList = await getBoardItem(searchContent, boardSort.sortType);
     setBoardItem(boardList, searchContent.boardCategory, true);
 })
 
 search.searchContent.addEventListener('input', async () => {
     searchContent.searchText = search.searchContent.value;
-    const newItems = await getBoardItem(searchContent)
+    const newItems = await getBoardItem(searchContent, boardSort.sortType)
     setBoardItem(newItems, searchContent.boardCategory, true)
 })
 
 const selectedboardCategoryButtonSet = (selectedButtonId = 'notice', buttons = boardCategorySelectButton) =>  {
     console.log(buttons)
     buttons.forEach(button => {
+        console.log(button)
         button.disabled = false;
     });
     const selectButton = document.getElementById(`${selectedButtonId}`);
+    console.log(selectButton)
     selectButton.disabled = true;
 }
 
-const selectButtonHandler = async (buttonType, search, event) => {
+const selectButtonHandler = async (buttonType, event) => {
     console.log(event)
     if (event.target.tagName === 'BUTTON') {
+        const searchCheck = search.searchCheck.checked;
         const selectedButtonId = event.target.id;
         boardSort.sortType = buttonType == 'sortType' ? selectedButtonId : boardSort.sortType;
-        searchContent.boardCategory = search && buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardCategory;
-        searchContent.boardContentType = search && !buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardContentType; 
-        selectBoardCategory = !search && buttonType =='boardCategory' ? selectedButtonId : selectBoardCategory;
-        const category = search ? searchContent.buttonType : selectBoardCategory;
+        searchContent.boardCategory = searchCheck && buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardCategory;
+        searchContent.boardContentType = searchCheck && !buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardContentType; 
+        selectBoardCategory = !searchCheck && buttonType =='boardCategory' ? selectedButtonId : selectBoardCategory;
+        const category = searchCheck ? searchContent.boardCategory : selectBoardCategory;
         if (buttonType == 'sortType'){
-            selectedboardCategoryButtonSet(selectedButtonId, boardSort.buttons)
+            selectedboardCategoryButtonSet(selectedButtonId, boardSort.buttons);
         }
         else{
-            selectedboardCategoryButtonSet(selectedButtonId, search ? (buttonType == 'boardCategory' ? searchButton.boardCategorySearchButton : searchButton.boardContentSearchButton) : boardCategorySelectButton);
+            selectedboardCategoryButtonSet(selectedButtonId, searchCheck ? (buttonType == 'boardCategory' ? searchButton.boardCategorySearchButton : searchButton.boardContentSearchButton) : boardCategorySelectButton);
         }
         
         const boardList = await getBoardItem(searchContent, boardSort.sortType);
+        console.log(category)
+        console.log(searchContent.boardCategory)
+        console.log(selectBoardCategory)
         setBoardItem(boardList, category, true);
         return selectedButtonId;
     }
 }
 
 // 이벤트 리스너에 함수 호출이 아니라 함수 자체를 전달합니다.
-boardCategorySelectContainer.addEventListener('click', (event) => selectButtonHandler('boardCategory', false, event));
-boardSort.container.addEventListener('click', (event => selectButtonHandler('sortType', false, event)))
+boardCategorySelectContainer.addEventListener('click', (event) => selectButtonHandler('boardCategory', event));
+console.log(boardCategorySelectContainer)
+console.log(boardSort.container)
+boardSort.container.addEventListener('click', (event) => selectButtonHandler('sortType', event))
 const searchDetailButtonSet = () => {
     // 이벤트 리스너에 함수 호출이 아니라 함수 자체를 전달합니다.
-    searchButton.boardCategorySearchContainer.addEventListener('click', (event) => selectButtonHandler('boardCategroy', true, event));
+    searchButton.boardCategorySearchContainer.addEventListener('click', (event) => selectButtonHandler('boardCategory', event));
     // 이벤트 리스너에 함수 호출이 아니라 함수 자체를 전달합니다.
-    searchButton.boardContentSearchContainer.addEventListener('click', (event) => selectButtonHandler('boardContent', true, event));
+    searchButton.boardContentSearchContainer.addEventListener('click', (event) => selectButtonHandler('boardContent', event));
 }
 
     
@@ -185,6 +193,7 @@ const setBoardItem = (boardData, selectedBoardCategory = 'notice', reset = false
     const boardList = document.querySelector('.boardList');
     console.log(boardData)
     if (boardList && boardData) {
+        console.log(boardData)
         if (reset)
             boardList.innerHTML = '';
         const itemsHtml = boardData
@@ -222,7 +231,7 @@ const addInfinityScrollEvent = () => {
             isProcessing = true;
 
             try {
-                const newItems = await getBoardItem(searchContent, offset, ITEMS_PER_LOAD);
+                const newItems = await getBoardItem(searchContent, boardSort.sortType, offset, ITEMS_PER_LOAD);
                 if (!newItems || newItems.length === 0) {
                     isEnd = true;
                 } else {
@@ -265,6 +274,7 @@ const init = async () => {
        
         selectedboardCategoryButtonSet();
         searchDetailButtonSet();
+        document.getElementById('time').click()
     } catch (error) {
         console.error('Initialization failed:', error);
     }

@@ -3,7 +3,7 @@ import * as dbConnect from '../database/index.js';
 
 // 게시글 목록 조회
 export const getPosts = async (requestData, response) => {
-    const { offset, limit , search, boardContentType, searchText } = requestData;
+    const { offset, limit , search, boardContentType, searchText, sortType } = requestData;
     let searchContentType;
 
     // 작은 따옴표를 제거합니다.
@@ -19,7 +19,13 @@ export const getPosts = async (requestData, response) => {
     } else {
         searchContentType = 'all';
     }
-
+    const sortTypes = {
+        time : 'post_table.created_at',
+        viewCount : 'post_table.hits    ',
+        commentCount : 'post_table.comment_count',
+        likeCount : 'post_table.\`like\`'
+    }
+    const sort = sortTypes[sortType];
 
 
     let sql = `
@@ -79,7 +85,7 @@ export const getPosts = async (requestData, response) => {
         }
 
     }
-    sql += `ORDER BY post_table.created_at DESC
+    sql += `ORDER BY ${sort} DESC
     LIMIT ${limit} OFFSET ${offset};`
     const results = await dbConnect.query(sql, response);
     if (!results) return null;
