@@ -12,15 +12,15 @@ import { request, response } from 'express';
 
 // 게시글 작성
 export const addLike = async (request, response) => {
-    const { postId } = request.params.post_id;
+    const postId  = request.params.post_id;
     const userId = request.headers.userid;
     const requestData = {
         postId : postId, 
         userId : userId
     };
     const results = await postModel.addLike(requestData, response);
-    return results;
-}
+    return results
+};
 export const writePost = async (request, response) => {
     try {
         if (request.attachFilePath === undefined) request.attachFilePath = null;
@@ -194,9 +194,12 @@ export const getLike = async (request, response) => {
             });
 
         const postId = request.params.post_id;
-
+        const userId = request.headers.userid;
+        const detail = request.params.detail;
         const requestData = {
-            postId,
+            postId : postId,
+            userId : userId,
+            detail : detail
         };
         const results = await postModel.getLike(requestData, response);
 

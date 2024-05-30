@@ -13,6 +13,9 @@ import {
     deletePost,
     writeComment,
     getComments,
+    getLike,
+    addLike,
+    deleteLike
 } from '../api/boardRequest.js';
 
 const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
@@ -33,14 +36,13 @@ const getBoardDetail = async postId => {
     const data = await response.json();
     return data.data[0];
 };
-const getCheckLike = async postId => {
-    const response = await getPost(postId);
-    if (!response.ok)
-        return new Error('게시글 정보를 가져오는데 실패하였습니다.');
+const getLikeInfo = async (postId, detail = true) => {
+    const response = await getLike(postId, detail);
 
     const data = await response.json();
-    return data.data[0];
+    return data.data;
 }
+
 const setBoardDetail = data => {
     // 헤드 정보
     const titleElement = document.querySelector('.title');
@@ -172,8 +174,8 @@ const inputComment = async () => {
     }
 };
 
-const clickLikeElement = (boardId, userId) => {
-
+const clickLikeElement = async (boardId) => {
+    await addLike(boardId)
 }
 
 const init = async () => {
@@ -207,14 +209,16 @@ const init = async () => {
         const pageId = getQueryString('id');
 
         const pageData = await getBoardDetail(pageId);
+        
         if (parseInt(pageData.user_id, 10) === parseInt(myInfo.userId, 10)) {
             setBoardModify(pageData, myInfo);
             
         }
+        const likeInfo = await getLikeInfo(pageId);
+        console.log(likeInfo)
+        const likeElemtent = document.querySelector('.like');
+        likeElemtent.addEventListener('click',  clickLikeElement(pageId));
         setBoardDetail(pageData);
-        getCheckLike(pageId)
-        // const likeElemtent = document.querySelector('.like');
-        // likeElemtent.addEventListener('click');
         getBoardComment(pageId).then(data => setBoardComment(data, myInfo));
     } catch (error) {
         console.error(error);

@@ -1,7 +1,7 @@
 import { getServerUrl, getCookie } from '../utils/function.js';
 
-export const getLike = postId => {
-    const result = fetch(`${getServerUrl()}/posts/like/${postId}`, {
+export const getLike = (postId, detail = false) => {
+    const result = fetch(`${getServerUrl()}/posts/like/${postId}/${detail}`, {
         headers: {
             session: getCookie('session'),
             userid: getCookie('userId'),
@@ -32,7 +32,7 @@ export const deleteLike = postId => {
     });
     return result;
 };
-export const getPost = postId => {
+export const getPost = (postId) => {
     const result = fetch(`${getServerUrl()}/posts/${postId}`, {
         headers: {
             session: getCookie('session'),

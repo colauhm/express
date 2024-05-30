@@ -86,18 +86,29 @@ export const getPosts = async (requestData, response) => {
     return results;
 };
 export const getLike = async (requestData, response) => {
-    const { postId } = requestData;
+    const { postId,userId, detail} = requestData;
 
-    const sql = `
+    let sql = `
     SELECT
         like_table.user_id,
         like_table.post_id
     FROM
         like_table
-    WHERE
-        like_table.post_id = ${postId};
+    
 
     `;
+    if (detail == 'true'){
+        sql += `
+        WHERE
+        like_table.post_id = ${postId} AND like_table.user_id = ${userId};
+        `;
+    }
+    else{
+        sql += `
+        WHERE
+        like_table.post_id = ${postId};
+        `;
+    }
     const results = await dbConnect.query(sql, response);
     return results;
 }
