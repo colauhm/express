@@ -178,17 +178,22 @@ const pageId = getQueryString('id');
         
 const clickLikeElement = async (boardId) => {
     const likeInfo = await getLikeInfo(pageId);
+    
     console.log(likeInfo)
     if(likeInfo != ''){
-        await deleteLike(boardId)
+        
+        await deleteLike(boardId);
     }
     else{
         await addLike(boardId);
+        
     } 
 }   
-const likeElemtent = document.querySelector('.like');
+const likeElemtent = document.querySelector('#like');
 likeElemtent.addEventListener('click', () => {
-    clickLikeElement(pageId)
+    likeElemtent.classList.toggle('active')
+    clickLikeElement(pageId);
+    
 });
 
 const init = async () => {
@@ -228,6 +233,8 @@ const init = async () => {
             
         }
         const likeInfo = await getLikeInfo(pageId);
+        if(likeInfo != '')
+            likeElemtent.classList.add('active')
         setBoardDetail(pageData);
         getBoardComment(pageId).then(data => setBoardComment(data, myInfo));
     } catch (error) {
