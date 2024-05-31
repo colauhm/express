@@ -127,3 +127,16 @@ input[type="checkbox" i] {
     display: flex;
     width: 100%;
 }
+.noticeBoard, .freeBoard, .QnABoard{
+    display: flex;
+    flex-direction: row;
+    gap: 10px; /* 아이템들 사이의 간격을 설정 */
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+.indexBoardList{
+    display: flex;
+    flex-direction:  column;
+    row-gap: 50px;
+    
+}

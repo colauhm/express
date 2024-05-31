@@ -1,8 +1,8 @@
 .boardItem {
     display: flex;
     flex-direction: column;
-    width: 100%;
-
+    /* width: 100%; */
+    width: 240px;
     padding: 16px 0;
     border: 1px solid #f1eeff;
     border-radius: 8px;

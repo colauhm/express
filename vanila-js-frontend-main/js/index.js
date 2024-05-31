@@ -8,8 +8,8 @@ const HTTP_NOT_AUTHORIZED = 401;
 const SCROLL_THRESHOLD = 0.9;
 const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
-const boardCategorySelectContainer = document.querySelector('.boardCategory');
-const boardCategorySelectButton = document.querySelectorAll('.boardCategoryButton');
+// const boardCategorySelectContainer = document.querySelector('.boardCategory');
+// const boardCategorySelectButton = document.querySelectorAll('.boardCategoryButton');
 
 const search = {
     searchContent : document.getElementById('searchText'),
@@ -99,11 +99,14 @@ const postButton = document.getElementById('writeLink');
 const displayButtonSet = (searchCheck = false) => {
     const displayState = searchCheck ? 'none' : 'flex';
     const searchDisplayState = searchCheck ? 'flex' : 'none';
-    boardCategorySelectContainer.style.display = displayState;
+    const indexBoard = document.querySelector('.indexBoardList')
+    //boardCategorySelectContainer.style.display = displayState;
     postButton.style.display = displayState;
     search.searchContent.style.display = searchDisplayState;
     search.searchDetailLabel.style.display = searchDisplayState;
     search.searchDetail.style.display = searchDisplayState;
+    boardSort.container.style.display = searchDisplayState;
+    indexBoard.style.display = displayState;
 }
 
 search.searchCheck.addEventListener('change', async () => {
@@ -113,8 +116,11 @@ search.searchCheck.addEventListener('change', async () => {
         searchContent.searchText = '';
         searchContent.boardCategory = selectBoardCategory;
     }
-    const boardList = await getBoardItem(searchContent, searchContent.boardCategory, boardSort.sortType);
-    setBoardItem(boardList, true);
+    // else{
+    //     const boardList = await getBoardItem(searchContent, searchContent.boardCategory, boardSort.sortType);
+    //     setBoardItem(boardList, true);
+    // }
+    
 })
 
 search.searchContent.addEventListener('input', async () => {
@@ -123,14 +129,14 @@ search.searchContent.addEventListener('input', async () => {
     setBoardItem(newItems, true)
 })
 
-const selectedboardCategoryButtonSet = (selectedButtonId = 'notice', buttons = boardCategorySelectButton) =>  {
+const selectedboardCategoryButtonSet = (selectedButtonId = 'time', buttons = boardSort.buttons) =>  {
     //console.log(buttons)
     buttons.forEach(button => {
         //console.log(button)
         button.disabled = false;
     });
     const selectButton = document.getElementById(`${selectedButtonId}`);
-    //console.log(selectButton)
+    console.log(selectButton)
     selectButton.disabled = true;
 }
 
@@ -138,33 +144,33 @@ const selectButtonHandler = async (buttonType, event) => {
     //console.log(event)
     if (event.target.tagName === 'BUTTON') {
         
-        const searchCheck = search.searchCheck.checked;
+        //const searchCheck = search.searchCheck.checked;
         const selectedButtonId = event.target.id;
         boardSort.sortType = buttonType == 'sortType' ? selectedButtonId : boardSort.sortType;
-        searchContent.boardCategory = searchCheck && buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardCategory;
+        searchContent.boardCategory = buttonType == 'boardCategory' ? selectedButtonId : searchContent.boardCategory;
         //console.log(searchCheck)
         //console.log(buttonType)
         //console.log(selectedButtonId)
-        searchContent.boardContentType = searchCheck && buttonType == 'boardContent' ? selectedButtonId : searchContent.boardContentType; 
+        searchContent.boardContentType = buttonType == 'boardContent' ? selectedButtonId : searchContent.boardContentType; 
         //console.log(searchContent.boardContentType)
-        selectBoardCategory = !searchCheck && buttonType =='boardCategory' ? selectedButtonId : selectBoardCategory;
-        const category = searchCheck ? searchContent.boardCategory : selectBoardCategory;
+        // selectBoardCategory = !searchCheck && buttonType =='boardCategory' ? selectedButtonId : selectBoardCategory;
+        // const category = searchCheck ? searchContent.boardCategory : selectBoardCategory;
         if (buttonType == 'sortType'){
             selectedboardCategoryButtonSet(selectedButtonId, boardSort.buttons);
         }
         else{
-            selectedboardCategoryButtonSet(selectedButtonId, searchCheck ? (buttonType == 'boardCategory' ? searchButton.boardCategorySearchButton : searchButton.boardContentSearchButton) : boardCategorySelectButton);
+            selectedboardCategoryButtonSet(selectedButtonId, buttonType == 'boardCategory' ? searchButton.boardCategorySearchButton : searchButton.boardContentSearchButton);
         }
         
         const boardList = await getBoardItem(searchContent, category, boardSort.sortType);
         
-        setBoardItem(boardList, true);
+        //setBoardItem(boardList, true);
         return selectedButtonId;
     }
 }
 
 // 이벤트 리스너에 함수 호출이 아니라 함수 자체를 전달합니다.
-boardCategorySelectContainer.addEventListener('click', (event) => selectButtonHandler('boardCategory', event));
+//boardCategorySelectContainer.addEventListener('click', (event) => selectButtonHandler('boardCategory', event));
 //console.log(boardCategorySelectContainer)
 //console.log(boardSort.container)
 boardSort.container.addEventListener('click', (event) => selectButtonHandler('sortType', event))
@@ -181,7 +187,7 @@ const searchDetailButtonSet = () => {
 // getBoardItem 함수
 const getBoardItem = async (searchContent, boardCategory = 'all', sortType ='time', offset = 0, limit = 5) => {
 
-    //console.log(searchContent)
+    console.log(searchContent)
     const response = await getPosts(offset, limit, boardCategory ,searchContent.search, searchContent.boardContentType, searchContent.searchText, sortType);
 
     if (!response.ok) {
@@ -191,7 +197,34 @@ const getBoardItem = async (searchContent, boardCategory = 'all', sortType ='tim
     const data = await response.json();
     return data.data;
 };
+const setIndexBoardItem = (boardData, boardType ,reset = false) => {
+    const boardList = {
+        notice: document.querySelector('.noticeBoard'),
+        free: document.querySelector('.freeBoard'),
+        QnA: document.querySelector('.QnABoard')
+    };
+    console.log(boardData)
+    if (boardList && boardData) {
+        //console.log(boardData)
 
+        boardList[boardType].innerHTML = '';
+        const itemsHtml = boardData
+        .map(data =>
+            BoardItem(
+                data.post_id,
+                data.created_at,
+                data.post_title,
+                data.hits,
+                data.profileImagePath,
+                data.nickname,
+                data.comment_count,
+                data.like,
+            ),
+        )
+        .join('');
+        boardList[boardType].innerHTML += ` ${itemsHtml}`;
+    }
+};
 const setBoardItem = (boardData, reset = false) => {
     const boardList = document.querySelector('.boardList');
     //console.log(boardData)
@@ -202,7 +235,6 @@ const setBoardItem = (boardData, reset = false) => {
         const itemsHtml = boardData
         .map(data =>
             BoardItem(
-                data.board_category,
                 data.post_id,
                 data.created_at,
                 data.post_title,
@@ -232,13 +264,13 @@ const addInfinityScrollEvent = () => {
             isProcessing = true;
 
             try {
-                const newItems = await getBoardItem(searchContent, searchContent.boardCategory ,boardSort.sortType, offset, ITEMS_PER_LOAD);
-                if (!newItems || newItems.length === 0) {
-                    isEnd = true;
-                } else {
-                    offset += ITEMS_PER_LOAD;
-                    setBoardItem(newItems);
-                }
+                // const newItems = await getBoardItem(searchContent, searchContent.boardCategory ,boardSort.sortType, offset, ITEMS_PER_LOAD);
+                // if (!newItems || newItems.length === 0) {
+                //     isEnd = true;
+                // } else {
+                //     offset += ITEMS_PER_LOAD;
+                //     setBoardItem(newItems);
+                // }
             } catch (error) {
                 console.error('Error fetching new items:', error);
                 isEnd = true;
@@ -249,11 +281,20 @@ const addInfinityScrollEvent = () => {
     });
 };
 
+const setIndexBoard  = async () => {
+    const noticeList = await getBoardItem(searchContent, 'notice')
+    const freeList = await getBoardItem(searchContent, 'free')
+    const QnAList = await getBoardItem(searchContent, 'QnA')
+    setIndexBoardItem(noticeList, 'notice');
+    setIndexBoardItem(freeList, 'free');
+    setIndexBoardItem(QnAList, 'QnA');
+}
+
 const init = async () => {
     try {
         
         const data = await authCheck();
-        if (data.status === HTTP_NOT_AUTHORIZED && boardCategory != 'notice') {
+        if (data.status === HTTP_NOT_AUTHORIZED) {
             window.location.href = '/html/login.html';
             return;
         }
@@ -274,9 +315,10 @@ const init = async () => {
        
         selectedboardCategoryButtonSet();
         searchDetailButtonSet();
-        const boardList = await getBoardItem(searchContent, 'notice');
-        setBoardItem(boardList);
-        document.getElementById('time').click()
+        setIndexBoard();
+        // const boardList = await getBoardItem(searchContent, 'notice');
+        // setBoardItem(boardList);
+       
         
     } catch (error) {
         console.error('Initialization failed:', error);

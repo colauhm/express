@@ -1,7 +1,6 @@
 import { padTo2Digits, getServerUrl } from '../../utils/function.js';
 
 const BoardItem = (
-    selectedButtonId = 'all',
     postId,
     date,
     postTitle,
