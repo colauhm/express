@@ -186,7 +186,7 @@ const searchDetailButtonSet = () => {
 
 
 // getBoardItem 함수
-const getBoardItem = async (searchContent, boardCategory = 'all', sortType ='time', offset = 0, limit = 5) => {
+const getBoardItem = async (searchContent, boardCategory = 'all', sortType ='time', offset = 0, limit = 4) => {
 
     console.log(searchContent)
     const response = await getPosts(offset, limit, boardCategory ,searchContent.search, searchContent.boardContentType, searchContent.searchText, sortType);

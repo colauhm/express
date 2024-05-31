@@ -35,7 +35,9 @@
     font-size: 24px;
     font-weight: bold;
     line-height: 32px;
-
+    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
     color: #000000;
     letter-spacing: -0.02em;
 
