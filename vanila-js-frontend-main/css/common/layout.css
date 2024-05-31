@@ -39,7 +39,7 @@ body {
 }
 
 .wrap {
-    width: 100%;
+    width: 250%;
     min-height: 100vh;
     padding-top: 142px;
     padding-bottom: 16px;
@@ -49,6 +49,8 @@ body {
     align-items: center;
     justify-content: flex-start;
     background-color: #f4f4f4;
+    opacity: 90%;
+    /* filter: blur(5px); */
 }
 
 .background {

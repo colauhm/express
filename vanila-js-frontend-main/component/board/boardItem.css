@@ -8,12 +8,13 @@
     width: 100%;
     
     padding: 16px 0;
-    border: 1px solid #f1eeff;
+    /* border: 1px solid #f1eeff; */
     border-radius: 8px;
-
+    background-color: #fff;
     cursor: pointer;
     box-shadow: 13px 13px 14px 5px #00000040;
     transition: background-color 1s;
+    /* filter: none; */
 }
 .boardItem:hover {
     background-color: #dddddd;
