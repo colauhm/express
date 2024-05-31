@@ -3,19 +3,17 @@ import * as dbConnect from '../database/index.js';
 
 // 게시글 목록 조회
 export const getPosts = async (requestData, response) => {
-    const { offset, limit , search, boardContentType, searchText, sortType } = requestData;
+    const { offset, limit , search, boardCategory,  boardContentType, searchText, sortType } = requestData;
     let searchContentType;
+    let category;
 
-    // 작은 따옴표를 제거합니다.
-    const sanitizedBoardContentType = boardContentType.replace(/'/g, "");
-
-    if (sanitizedBoardContentType !== 'all') {
+    if (boardContentType !== 'all') {
         const contentTypes = {
             searchTitle: 'post_table.post_title',
             searchWriter: 'post_table.nickname',
             searchContent: 'post_table.post_content'
         };
-        searchContentType = contentTypes[sanitizedBoardContentType];
+        searchContentType = contentTypes[boardContentType];
     } else {
         searchContentType = 'all';
     }
@@ -26,7 +24,19 @@ export const getPosts = async (requestData, response) => {
         likeCount : 'post_table.\`like\`'
     }
     const sort = sortTypes[sortType];
-
+    if (boardCategory !== 'all'){
+        const categories = {
+            notice : 'notice',
+            free : 'free',
+            QnA : 'QnA',
+            searchNotice : 'notice',
+            searchFree : 'free',
+            searchQnA : 'QnA'
+        };
+        category = categories[boardCategory];
+    } else{
+        category = 'all';
+    }
 
     let sql = `
     SELECT
@@ -62,9 +72,12 @@ export const getPosts = async (requestData, response) => {
     WHERE post_table.deleted_at IS NULL
     
     `;
-
+    if (category != 'all'){
+        sql += `
+        AND post_table.board_category = '${category}'
+        `
+    }
     if (search == 'true') {
-
         if(searchText == ''){
             return []
         }
@@ -87,8 +100,10 @@ export const getPosts = async (requestData, response) => {
     }
     sql += `ORDER BY ${sort} DESC
     LIMIT ${limit} OFFSET ${offset};`
+
     const results = await dbConnect.query(sql, response);
     if (!results) return null;
+
     return results;
 };
 export const getLike = async (requestData, response) => {

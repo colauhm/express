@@ -151,12 +151,14 @@ export const getPosts = async (request, response) => {
                 data: null,
             });
 
-        const { offset, limit , search, boardContentType, searchText, sortType} = request.query;
+        const { offset, limit , boardCategory, search,  boardContentType, searchText, sortType} = request.query;
 
         const requestData = {
             offset,
             limit,
+            boardCategory,
             search,
+            
             boardContentType,
             searchText,
             sortType
