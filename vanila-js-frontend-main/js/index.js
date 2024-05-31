@@ -161,10 +161,11 @@ const selectButtonHandler = async (buttonType, event) => {
         else{
             selectedboardCategoryButtonSet(selectedButtonId, buttonType == 'boardCategory' ? searchButton.boardCategorySearchButton : searchButton.boardContentSearchButton);
         }
+        if (search.searchCheck.checked){
+            const boardList = await getBoardItem(searchContent, searchContent.boardCategory, boardSort.sortType);
+            setBoardItem(boardList, true);
+        }
         
-        const boardList = await getBoardItem(searchContent, category, boardSort.sortType);
-        
-        //setBoardItem(boardList, true);
         return selectedButtonId;
     }
 }
