@@ -153,12 +153,25 @@ const selectPostsButtonHandler = async (event) => {
         const boardType = event.target.id;
         const boardList = document.querySelector('.boardList');
         const boardName = document.createElement('h3');
+        const categorizeButton = document.createElement('button');
+        const topBar = document.createElement('div');
+        topBar.classList.add('topBar');
+        categorizeButton.classList.add('categorizeButton')
+        categorizeButton.innerHTML = 'category';
         boardName.innerHTML = boardType;
-        boardList.appendChild(boardName);
+        topBar.appendChild(boardName);
+        topBar.appendChild(categorizeButton);
+        boardList.appendChild(topBar);
         const newboardList = await getBoardItem(searchContent, boardType);
         setBoardItem(newboardList);
         const categorizedBoards = document.querySelector('.indexBoardList');
         categorizedBoards.style.display = 'none'
+        const backButton = document.querySelector('.categorizeButton')
+        backButton.addEventListener('click' , () => {
+            boardList.innerHTML = '';
+            categorizedBoards.style.display = 'flex'
+            setIndexBoard();
+        })
     }
 }
 const selectButtonHandler = async (buttonType, event) => {
