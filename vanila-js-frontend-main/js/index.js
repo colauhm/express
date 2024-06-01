@@ -31,6 +31,15 @@ const boardSort = {
 }
 
 
+
+const selectPostsButton = document.querySelectorAll('.boards');
+
+selectPostsButton.forEach(button => {
+    button.addEventListener('click', (event) => {
+        selectPostsButtonHandler(event);
+    });
+  });
+
 const searchDropdownmenu = () => {
     const wrap = document.createElement('div');
 
@@ -139,7 +148,19 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'time', buttons = boa
     console.log(selectButton)
     selectButton.disabled = true;
 }
-
+const selectPostsButtonHandler = async (event) => {
+    if (event.target.tagName === 'BUTTON'){
+        const boardType = event.target.id;
+        const boardList = document.querySelector('.boardList');
+        const boardName = document.createElement('h3');
+        boardName.innerHTML = boardType;
+        boardList.appendChild(boardName);
+        const newboardList = await getBoardItem(searchContent, boardType);
+        setBoardItem(newboardList);
+        const categorizedBoards = document.querySelector('.indexBoardList');
+        categorizedBoards.style.display = 'none'
+    }
+}
 const selectButtonHandler = async (buttonType, event) => {
     //console.log(event)
     if (event.target.tagName === 'BUTTON') {
@@ -265,13 +286,16 @@ const addInfinityScrollEvent = () => {
             isProcessing = true;
 
             try {
-                // const newItems = await getBoardItem(searchContent, searchContent.boardCategory ,boardSort.sortType, offset, ITEMS_PER_LOAD);
-                // if (!newItems || newItems.length === 0) {
-                //     isEnd = true;
-                // } else {
-                //     offset += ITEMS_PER_LOAD;
-                //     setBoardItem(newItems);
-                // }
+                if(search.searchCheck.checked){
+                    const newItems = await getBoardItem(searchContent, searchContent.boardCategory ,boardSort.sortType, offset, ITEMS_PER_LOAD);
+                    if (!newItems || newItems.length === 0) {
+                        isEnd = true;
+                    } else {
+                        offset += ITEMS_PER_LOAD;
+                        setBoardItem(newItems);
+                    }
+                }
+                
             } catch (error) {
                 console.error('Error fetching new items:', error);
                 isEnd = true;
