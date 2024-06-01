@@ -114,13 +114,15 @@ const displayButtonSet = (searchCheck = false) => {
     search.searchContent.style.display = searchDisplayState;
     search.searchDetailLabel.style.display = searchDisplayState;
     search.searchDetail.style.display = searchDisplayState;
-    boardSort.container.style.display = searchDisplayState;
     indexBoard.style.display = displayState;
+    boardSort.container.style.display = searchDisplayState;
 }
 
 search.searchCheck.addEventListener('change', async () => {
     displayButtonSet(search.searchCheck.checked)
     searchContent.search = search.searchCheck.checked;
+    const boardList = document.querySelector('.boardList');
+    boardList.innerHTML = '';
     if (!searchContent.search){
         searchContent.searchText = '';
         searchContent.boardCategory = selectBoardCategory;
@@ -165,10 +167,12 @@ const selectPostsButtonHandler = async (event) => {
         const newboardList = await getBoardItem(searchContent, boardType);
         setBoardItem(newboardList);
         const categorizedBoards = document.querySelector('.indexBoardList');
-        categorizedBoards.style.display = 'none'
+        boardSort.container.style.display = 'flex';
+        categorizedBoards.style.display = 'none';
         const backButton = document.querySelector('.categorizeButton')
         backButton.addEventListener('click' , () => {
             boardList.innerHTML = '';
+            boardSort.container.style.display = 'none';
             categorizedBoards.style.display = 'flex'
             setIndexBoard();
         })
