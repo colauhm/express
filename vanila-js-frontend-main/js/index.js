@@ -121,6 +121,7 @@ const displayButtonSet = (searchCheck = false) => {
 search.searchCheck.addEventListener('change', async () => {
     displayButtonSet(search.searchCheck.checked)
     searchContent.search = search.searchCheck.checked;
+    //boardSort.container.removeEventListener('click', sortDetailPosts);
     const boardList = document.querySelector('.boardList');
     boardList.innerHTML = '';
     if (!searchContent.search){
@@ -170,6 +171,13 @@ const selectPostsButtonHandler = async (event) => {
         boardSort.container.style.display = 'flex';
         categorizedBoards.style.display = 'none';
         const backButton = document.querySelector('.categorizeButton')
+
+        boardSort.container.addEventListener('click',() =>{
+
+            sortDetailPosts(boardType, boardSort.sortType)
+        } ); 
+
+        
         backButton.addEventListener('click' , () => {
             boardList.innerHTML = '';
             boardSort.container.style.display = 'none';
@@ -177,6 +185,11 @@ const selectPostsButtonHandler = async (event) => {
             setIndexBoard();
         })
     }
+}
+const sortDetailPosts = async(boardType, sortType) => {
+    console.log("sortDetailPosts")
+    const sortBoardList = await getBoardItem(searchContent, boardType, sortType);
+    setBoardItem(sortBoardList, true);
 }
 const selectButtonHandler = async (buttonType, event) => {
     //console.log(event)
@@ -266,11 +279,15 @@ const setIndexBoardItem = (boardData, boardType ,reset = false) => {
 };
 const setBoardItem = (boardData, reset = false) => {
     const boardList = document.querySelector('.boardList');
+    const listContainer = document.createElement('div');
+    listContainer.classList.add('listContainer');
+    boardList.appendChild(listContainer);
+    const container = document.querySelector('.listContainer');
     //console.log(boardData)
     if (boardList && boardData) {
         //console.log(boardData)
         if (reset)
-            boardList.innerHTML = '';
+            container.innerHTML = '';
         const itemsHtml = boardData
         .map(data =>
             BoardItem(
@@ -285,7 +302,7 @@ const setBoardItem = (boardData, reset = false) => {
             ),
         )
         .join('');
-        boardList.innerHTML += ` ${itemsHtml}`;
+        container.innerHTML += ` ${itemsHtml}`;
     }
 };
 

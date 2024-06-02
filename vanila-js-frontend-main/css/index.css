@@ -14,8 +14,15 @@ label{
 label:hover{
     background-color: #dddddd;
 }
-.boardList {
+.boardList{
     width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 30px;
+}
+.listContainer {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
