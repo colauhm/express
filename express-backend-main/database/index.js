@@ -1,9 +1,9 @@
 import mysql from 'mysql2/promise';
 
 const config = {
-    host: 'localhost', // DB 주소 (현재는 로컬호스트)
+    host: '3.39.227.132', // DB 주소 (현재는 로컬호스트)
     user: 'root', // DB 계정 이름으로 변경
-    password: 'tjdwnsals12*', // DB 계정 비밀번호으로 변경
+    password: 'my-secret-pw', // DB 계정 비밀번호으로 변경
     database: 'edu_community', // 데이터베이스 이름으로 변경 (교재에서는 edu_community)
     waitForConnections: true,
     port: 3306,
