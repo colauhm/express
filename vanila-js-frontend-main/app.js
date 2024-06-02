@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 const server = app.listen(port, () => {
-    console.log(`${server.address().address}`)
-    console.log(`Server is running on port ${port}`);
-});
+    const host = server.address().address;
+    const actualHost = host === '::' ? 'localhost' : host;
+    console.log(`Server is running at http://${actualHost}:${port}`);
+  });
