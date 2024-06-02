@@ -4,7 +4,7 @@ export const getServerUrl = () => {
     const host = window.location.hostname;
     return host.includes('localhost')
         ? 'http://localhost:3000'
-        : 'https://node-community-api.startupcode.kr:443';
+        : 'https://3.39.227.132:3000';
 };
 
 export const setCookie = (cookie_name, value, days) => {
