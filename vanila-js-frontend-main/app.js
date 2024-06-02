@@ -16,6 +16,7 @@ app.get('/', (req, res) => {
     res.redirect('/html/index.html');
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
+    console.log(`${server.address().address}`)
     console.log(`Server is running on port ${port}`);
 });
