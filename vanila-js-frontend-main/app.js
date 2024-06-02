@@ -18,5 +18,17 @@ app.get('/', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    console.log(`Server host ${window.location.hostname}`)
+    // server.js
+
+    const os = require('os');
+
+    // 환경 변수에서 호스트 이름을 가져오거나 기본값으로 'localhost' 사용
+    const host = process.env.HOST || 'localhost';
+
+    // os 모듈을 사용하여 시스템 호스트 이름 가져오기
+    const hostname = os.hostname();
+
+    console.log(`Server host (environment variable): ${host}`);
+    console.log(`Server host (os module): ${hostname}`);
+
 });
