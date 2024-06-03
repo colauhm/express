@@ -10,7 +10,7 @@ export const getLike = (postId, detail = false) => {
     });
     return result;
 };
-export const addLike = postId => {
+export const addLike = async(postId) => {
     const result = fetch(`${getServerUrl()}/posts/like/${postId}`, {
         method: 'POST',
         headers: {
@@ -32,7 +32,7 @@ export const deleteLike = async (postId) => {
         noCORS: true,
     });
     console.log("deletelike")
-    return result;
+    return result
 };
 export const getPost = (postId) => {
     const result = fetch(`${getServerUrl()}/posts/${postId}`, {

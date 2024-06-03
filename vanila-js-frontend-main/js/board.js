@@ -85,6 +85,10 @@ const setBoardDetail = data => {
 
     const commentCountElement = document.querySelector('.commentCount h3');
     commentCountElement.textContent = data.comment_count.toLocaleString();
+
+    const likeCountElement = document.querySelector('.likeCount h3');
+    likeCountElement.textContent = data.like.toLocaleString();
+
 };
 
 const setBoardModify = async (data, myInfo) => {
@@ -177,23 +181,24 @@ const pageId = getQueryString('id');
 
         
 const clickLikeElement = async (boardId) => {
-    const likeInfo = await getLikeInfo(pageId);
-    
-    console.log(likeInfo)
+    const likeInfo = await getLikeInfo(boardId);
     if(likeInfo != ''){
-        
-        await deleteLike(boardId);
+        const likeCount = await deleteLike(boardId);
+        console.log(likeCount)
     }
     else{
-        await addLike(boardId);
-        
+        const likeCount = await addLike(boardId);
+        console.log(likeCount)
     } 
+    const pageData = await getBoardDetail(boardId);
+    const likeCountElement = document.querySelector('.likeCount h3');
+    console.log(pageData.like)
+    likeCountElement.textContent = pageData.like.toLocaleString();
 }   
 const likeElemtent = document.querySelector('#like');
-likeElemtent.addEventListener('click', () => {
+likeElemtent.addEventListener('click',  () => {
     likeElemtent.classList.toggle('active')
     clickLikeElement(pageId);
-    
 });
 
 const init = async () => {
@@ -227,7 +232,7 @@ const init = async () => {
         const pageId = getQueryString('id');
 
         const pageData = await getBoardDetail(pageId);
-        
+        //console.log(pageData)
         if (parseInt(pageData.user_id, 10) === parseInt(myInfo.userId, 10)) {
             setBoardModify(pageData, myInfo);
             
