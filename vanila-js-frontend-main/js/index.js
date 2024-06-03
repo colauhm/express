@@ -320,7 +320,8 @@ const addInfinityScrollEvent = () => {
             isProcessing = true;
 
             try {
-                if(search.searchCheck.checked){
+                const boardList = document.querySelector('.boardList');
+                if(boardList.innerHTML != ''){
                     const newItems = await getBoardItem(searchContent, searchContent.boardCategory ,boardSort.sortType, offset, ITEMS_PER_LOAD);
                     if (!newItems || newItems.length === 0) {
                         isEnd = true;
