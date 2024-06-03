@@ -36,7 +36,12 @@ const selectPostsButton = document.querySelectorAll('.boards');
 
 selectPostsButton.forEach(button => {
     button.addEventListener('click', (event) => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // 스크롤이 부드럽게 이동하도록 설정
+        });
         selectPostsButtonHandler(event);
+
     });
   });
 
