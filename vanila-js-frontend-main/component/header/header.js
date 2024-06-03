@@ -4,11 +4,14 @@ const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
 
 const headerDropdownMenu = () => {
     const wrap = document.createElement('div');
-
+    
+    const titleComment = document.createElement('h3');
     const modifyInfoLink = document.createElement('a');
     const modifyPasswordLink = document.createElement('a');
     const logoutLink = document.createElement('a');
+    const userNickname = '';
 
+    titleComment.textContent = `${userNickname}님 환영합니다.`
     modifyInfoLink.textContent = '회원정보수정';
     modifyPasswordLink.textContent = '비밀번호수정';
     logoutLink.textContent = '로그아웃';
@@ -22,7 +25,7 @@ const headerDropdownMenu = () => {
     });
 
     wrap.classList.add('drop');
-
+    wrap.appendChild(titleComment);
     wrap.appendChild(modifyInfoLink);
     wrap.appendChild(modifyPasswordLink);
     wrap.appendChild(logoutLink);
