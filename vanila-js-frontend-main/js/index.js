@@ -350,6 +350,40 @@ const setIndexBoard  = async () => {
     setIndexBoardItem(QnAList, 'QnA');
 }
 
+const setUserInfo = () => {
+    const drop = document.querySelector('.drop');
+    drop.classList.toggle('none');
+    event.stopPropagation();
+
+    const wrapElement = document.querySelector('.wrap');
+    const headerElement = document.querySelector('header');
+    
+    moveElement(wrapElement);
+    moveElement(headerElement);
+}
+const delectUserInfo = () => {
+    const drop = document.querySelector('.drop');
+    drop.classList.add('none');
+    const wrapElement = document.querySelector('.wrap');
+    const headerElement = document.querySelector('header');
+    
+    moveElement(wrapElement, true);
+    moveElement(headerElement, true);
+}
+
+
+const moveElement = (myElement, reset = false) => {
+    if (reset){
+        myElement.style.margin = ''; 
+        return;
+    }
+    if (myElement.style.marginLeft === '65%') {
+        myElement.style.margin = ''; // margin 속성 제거
+    } else {
+        myElement.style.marginLeft = '65%';
+    }
+}
+
 const init = async () => {
     try {
         
@@ -366,9 +400,15 @@ const init = async () => {
             document.body,
             Header('Community', 0, fullProfileImagePath),
         );
-
+        const profileElement = document.querySelector('.profile');
+        
+        profileElement.addEventListener('click', () => {
+            setUserInfo();
+        });
        
-
+        window.addEventListener('click', () =>{
+            delectUserInfo();
+        })
         addInfinityScrollEvent();
 
         displayButtonSet();

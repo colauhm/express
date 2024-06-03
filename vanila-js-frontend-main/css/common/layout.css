@@ -39,6 +39,7 @@ body {
 }
 
 .wrap {
+    transition: margin-left 0.5s ease;
     width: 250%;
     min-height: 100vh;
     padding-top: 142px;

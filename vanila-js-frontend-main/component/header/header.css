@@ -1,7 +1,8 @@
 header {
+    transition: margin-left 0.5s ease;
     width: 250%;
     display: grid;
-    grid-template-areas: 'lbtn title rbtn';
+    grid-template-areas: 'rbtn title lbtn';
     grid-template-columns: 40px 1fr 40px;
 
     align-items: center;

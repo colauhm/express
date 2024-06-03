@@ -42,7 +42,7 @@ const Header = (
     let rightBtnElement;
     let headerElement;
     let h1Element;
-
+ 
     if (leftBtn == 1 || leftBtn == 2) {
         leftBtnElement = document.createElement('img');
         leftBtnElement.classList.add('back');
@@ -70,10 +70,10 @@ const Header = (
             const Drop = headerDropdownMenu();
             Drop.classList.add('none');
 
-            profileElement.addEventListener('click', () => {
-                Drop.classList.toggle('none');
-                event.stopPropagation();
-            });
+            // profileElement.addEventListener('click', () => {
+            //     Drop.classList.toggle('none');
+            //     event.stopPropagation();
+            // });
 
             rightBtnElement.appendChild(profileElement);
             rightBtnElement.appendChild(Drop);
