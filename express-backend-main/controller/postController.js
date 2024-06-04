@@ -61,7 +61,7 @@ export const writePost = async (request, response) => {
             attachFilePath:
                 attachFilePath === null ? null : mysql.escape(attachFilePath),
         };
-        console.log(requestData)
+        //console.log(requestData)
         const results = await postModel.writePlainPost(requestData, response);
 
         if (!results || results === null)
@@ -151,7 +151,7 @@ export const getPosts = async (request, response) => {
                 data: null,
             });
 
-        const { offset, limit , boardCategory, search,  boardContentType, searchText, sortType} = request.query;
+        const { offset, limit , boardCategory, search,  boardContentType, searchText, sortType, likePostData} = request.query;
 
         const requestData = {
             offset,
@@ -161,10 +161,11 @@ export const getPosts = async (request, response) => {
             
             boardContentType,
             searchText,
-            sortType
+            sortType,
+            likePostData
         };
         const results = await postModel.getPosts(requestData, response);
-        console.log(results)
+        //console.log(results)
         if (!results || results === null)
             return response.status(404).json({
                 status: 404,
@@ -307,8 +308,8 @@ export const deleteLike = async (request, response) => {
         userId : userId
     }
     const result = await postModel.deleteLike(requestData, response);
-    console.log("result")
-    console.log(result)
+    //console.log("result")
+    //console.log(result)
     return(result)
 }
 // 게시글 삭제

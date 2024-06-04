@@ -3,10 +3,11 @@ import * as dbConnect from '../database/index.js';
 
 // 게시글 목록 조회
 export const getPosts = async (requestData, response) => {
-    const { offset, limit , search, boardCategory,  boardContentType, searchText, sortType } = requestData;
+    const { offset, limit , search, boardCategory,  boardContentType, searchText, sortType , likePostData} = requestData;
     let searchContentType;
     let category;
-
+    
+    
     if (boardContentType !== 'all') {
         const contentTypes = {
             searchTitle: 'post_table.post_title',
@@ -78,26 +79,36 @@ export const getPosts = async (requestData, response) => {
         `
     }
     if (search == 'true') {
-        if(searchText == ''){
-            return []
-        }
-        if (searchContentType != 'all') {
+        if(likePostData !== 'undefined'){
             sql += `
             AND (
-                ${searchContentType} LIKE '%${searchText}%'
+                post_table.post_id IN (${likePostData})
             )
             `;
-        } else {
-            sql += `
-            AND (
-                post_table.post_title LIKE '%${searchText}%'
-                OR post_table.post_content LIKE '%${searchText}%'
-                OR post_table.nickname LIKE '%${searchText}%'
-            )
-            `;
+        }else{
+            if(searchText == ''){
+                return []
+            }
+            if (searchContentType != 'all') {
+                sql += `
+                AND (
+                    ${searchContentType} LIKE '%${searchText}%'
+                )
+                `;
+            } else {
+                sql += `
+                AND (
+                    post_table.post_title LIKE '%${searchText}%'
+                    OR post_table.post_content LIKE '%${searchText}%'
+                    OR post_table.nickname LIKE '%${searchText}%'
+                )
+                `;
+            }
         }
+        
 
     }
+
     sql += `ORDER BY ${sort} DESC
     LIMIT ${limit} OFFSET ${offset};`
 

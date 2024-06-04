@@ -8,18 +8,21 @@ const userPostInfo = async () => {
         const userData = await authCheck();
         const writtenResponse = await getPosts(0, 999, 'all', true, 'searchWriter', userData.data.nickname, 'time');
         const likePostIdResponse = await getLike();  
-        const likePostIdData = await likePostIdResponse.json();
+        const likePostIdData = await likePostIdResponse.json(); 
+        const likePostid = likePostIdData.data.map(item => item.post_id);
+
         const writtenData = await writtenResponse.json();
-        const likeResponse = await getPosts(0, 999, 'all', true, 'searchWriter', userData.data.nickname, 'time', likePostIdData)
-        
+        console.log(likePostIdData.data)
+        const likeResponse = await getPosts(0, 999, 'all', true, 'searchWriter', userData.data.nickname, 'time', likePostid)
+        const likeData = await likeResponse.json();
 
         //console.log(likeData.data)
           
-        //console.log(likeData);
+        console.log(likeData);
         const data = {
             userData : userData,
             writtenPost : writtenData,
-            //likePost : likeData
+            likePost : likeData
         }    
         
         return data
@@ -33,25 +36,29 @@ const headerDropdownMenu = () => {
     // console.log(likeData);
     const userData = dropdownMenuData.userData;
     const writtenPosts = dropdownMenuData.writtenPost;
-    //const likePosts = dropdownMenuData.likePost;
+    const likePosts = dropdownMenuData.likePost;
     const wrap = document.createElement('div');
     // console.log(writtenPostList.data)
     const titleComment = document.createElement('h3');
     const modifyInfoLink = document.createElement('a');
     const modifyPasswordLink = document.createElement('a');
     const logoutLink = document.createElement('a');
-    //const userNickname = data.data.nickname;
+
     const posts = document.createElement('div');
     const postsTopBar = document.createElement('div');
     const writtenPostsButton = document.createElement('button');
     const likePostsButton = document.createElement('button');
+    const numberSortImg = document.createElement('h3');
 
     writtenPostsButton.classList.add('writtenPost');
     likePostsButton.classList.add('likePost');
+    postsTopBar.classList.add('postsTopBar');
+
 
     writtenPostsButton.textContent = '작성한 글';
     likePostsButton.textContent = '좋아요한 글';
-    titleComment.textContent = `${userData.data.nickname}님 환영합니다.`
+    numberSortImg.innerHTML = '👀 ❤️';
+    titleComment.textContent = `${userData.data.nickname}님 환영합니다.`;
     modifyInfoLink.textContent = '회원정보수정';
     modifyPasswordLink.textContent = '비밀번호수정';
     logoutLink.textContent = '로그아웃';
@@ -65,6 +72,7 @@ const headerDropdownMenu = () => {
     });
     postsTopBar.appendChild(writtenPostsButton);
     postsTopBar.appendChild(likePostsButton);
+    postsTopBar.appendChild(numberSortImg);
     posts.appendChild(postsTopBar);
     wrap.classList.add('drop');
     wrap.appendChild(titleComment);
