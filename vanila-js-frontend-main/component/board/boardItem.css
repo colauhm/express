@@ -32,6 +32,7 @@
 }
 
 .boardItem .title {
+    display: block;
     font-size: 24px;
     font-weight: bold;
     line-height: 32px;
