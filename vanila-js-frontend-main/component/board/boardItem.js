@@ -9,6 +9,7 @@ const BoardItem = (
     writer,
     commentCount,
     like,
+    min = false,
 ) => {
 
     // 파라미터 값이 없으면 리턴
@@ -35,6 +36,20 @@ const BoardItem = (
 
     const formattedDate = `${year}-${padTo2Digits(month)}-${padTo2Digits(day)} ${padTo2Digits(hours)}:${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
     const API_HOST = getServerUrl();
+    if(min){
+        return`
+        <a href="/html/board.html?id=${postId}">
+            <div class="minBoardItem">
+                <h2 class="title">${postTitle}</h2>
+                <div class="info">
+                    <h3 class="views"><b>${hits}</b></h3>
+                    <h3 class="views"><b>${commentCount}</b></h3>
+                    <h3 class="views"><b>${like}</b></h3>
+                </div>
+            </div>
+        </a>
+    `;
+    }
     return `
     <a href="/html/board.html?id=${postId}">
         <div class="boardItem">
@@ -54,6 +69,7 @@ const BoardItem = (
         </div>
     </a>
 `;
+
     
     
     

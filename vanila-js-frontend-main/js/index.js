@@ -2,7 +2,7 @@ import BoardItem from '../component/board/boardItem.js';
 import Header from '../component/header/header.js';
 import { authCheck, getServerUrl, prependChild ,getCookie} from '../utils/function.js';
 import { getPosts } from '../api/indexRequest.js';
-
+import {userPostInfo} from '../component/header/header.js';
 const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
 const HTTP_NOT_AUTHORIZED = 401;
 const SCROLL_THRESHOLD = 0.9;
@@ -10,6 +10,7 @@ const INITIAL_OFFSET = 5;
 const ITEMS_PER_LOAD = 5;
 // const boardCategorySelectContainer = document.querySelector('.boardCategory');
 // const boardCategorySelectButton = document.querySelectorAll('.boardCategoryButton');
+const dropdownMenuData = await userPostInfo();
 
 const search = {
     searchContent : document.getElementById('searchText'),
@@ -107,6 +108,43 @@ search.searchDetailCheckBox.addEventListener('change', () => {
 
 let selectBoardCategory = 'notice';
 
+const dropDownPostHandler = () => {
+    const writtenPostData = dropdownMenuData.writtenPost;
+    const likePostData = dropdownMenuData.likePost;
+    const wirttenPostButton = document.querySelector('.writtenPost');
+    const likePostButton = document.querySelector('.likePost');
+    wirttenPostButton.addEventListener('click', () => {
+        setDropDownPost(writtenPostData.data, true);
+    });
+    likePostButton.addEventListener('click', () => {
+        setDropDownPost(likePostData.data, true);
+    })
+}
+const setDropDownPost = (boardData) => {
+    const boardList = document.querySelector('.postList')
+    //console.log(boardData)
+    if (boardList && boardData) {
+        console.log(boardData)
+
+        boardList.innerHTML = '';
+        const itemsHtml = boardData
+        .map(data =>
+            BoardItem(
+                data.post_id,
+                data.created_at,
+                data.post_title,
+                data.hits,
+                data.profileImagePath,
+                data.nickname,
+                data.comment_count,
+                data.like,
+                true
+            ),
+        )
+        .join('');
+        boardList.innerHTML += ` ${itemsHtml}`;
+    }
+};
 
 const postButton = document.getElementById('writeLink');
 
@@ -260,6 +298,7 @@ const setIndexBoardItem = (boardData, boardType ,reset = false) => {
         free: document.querySelector('.freeBoard'),
         QnA: document.querySelector('.QnABoard')
     };
+    console.log(boardData)
     //console.log(boardData)
     if (boardList && boardData) {
         //console.log(boardData)
@@ -359,6 +398,7 @@ const setUserInfo = (event) => {
 
     if(event.target.tagName !== 'BUTTON'){
         console.log(event.target.tagName)
+        document.querySelector('.writtenPost').click();
         const drop = document.querySelector('.drop');
         drop.classList.toggle('none');
         event.stopPropagation();
@@ -433,7 +473,7 @@ const init = async () => {
         setIndexBoard();
         // const boardList = await getBoardItem(searchContent, 'notice');
         // setBoardItem(boardList);
-       
+        dropDownPostHandler();
         
     } catch (error) {
         console.error('Initialization failed:', error);

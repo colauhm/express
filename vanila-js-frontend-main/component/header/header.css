@@ -1,3 +1,7 @@
+/* h3{
+    display: flex;
+    justify-content: center;
+} */
 header {
     transition: margin-left 0.5s ease;
     width: 250%;
@@ -86,4 +90,22 @@ header .drop a:hover {
 
 .none {
     display: none !important;
+}
+.postsTopBar{
+    display: flex;
+    justify-content: space-evenly;
+}
+.postsTopBar button{
+    width:42%;
+}
+.postsTopBar h3{
+    width: 30%;
+}
+.postList{
+    height: 300px;
+    overflow-y: scroll;
+
+}
+.postList::-webkit-scrollbar{
+    display: none;
 }

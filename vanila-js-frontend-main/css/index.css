@@ -14,6 +14,24 @@ label{
 label:hover{
     background-color: #dddddd;
 }
+.drop h3, h2{
+    display: flex;
+    justify-content: center;
+}
+.minBoardItem{
+    display: flex;
+    width: 100%;
+    box-shadow: 1px 2px 20px 0px #00000040;
+
+}
+.minBoardItem .info{
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+}
+.minBoardItem h2{
+    width: 84%;
+}
 .boardList{
     width: 90%;
     height: 100%;

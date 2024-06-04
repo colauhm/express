@@ -1,9 +1,10 @@
 import { getPosts } from '../../api/indexRequest.js';
 import { deleteCookie, getCookie, getServerUrl,authCheck } from '../../utils/function.js';
 import {getLike} from '../../api/boardRequest.js'
+import BoardItem from '../board/boardItem.js'
 const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
 
-const userPostInfo = async () => {
+export const userPostInfo = async () => {
     if(getCookie('session')){ 
         const userData = await authCheck();
         const writtenResponse = await getPosts(0, 999, 'all', true, 'searchWriter', userData.data.nickname, 'time');
@@ -35,8 +36,6 @@ const headerDropdownMenu = () => {
     //console.log(data)
     // console.log(likeData);
     const userData = dropdownMenuData.userData;
-    const writtenPosts = dropdownMenuData.writtenPost;
-    const likePosts = dropdownMenuData.likePost;
     const wrap = document.createElement('div');
     // console.log(writtenPostList.data)
     const titleComment = document.createElement('h3');
@@ -45,6 +44,7 @@ const headerDropdownMenu = () => {
     const logoutLink = document.createElement('a');
 
     const posts = document.createElement('div');
+    const postList = document.createElement('div');
     const postsTopBar = document.createElement('div');
     const writtenPostsButton = document.createElement('button');
     const likePostsButton = document.createElement('button');
@@ -53,11 +53,11 @@ const headerDropdownMenu = () => {
     writtenPostsButton.classList.add('writtenPost');
     likePostsButton.classList.add('likePost');
     postsTopBar.classList.add('postsTopBar');
-
+    postList.classList.add('postList');
 
     writtenPostsButton.textContent = '작성한 글';
     likePostsButton.textContent = '좋아요한 글';
-    numberSortImg.innerHTML = '👀 ❤️';
+    numberSortImg.innerHTML = '👀 💬 ❤️';
     titleComment.textContent = `${userData.data.nickname}님 환영합니다.`;
     modifyInfoLink.textContent = '회원정보수정';
     modifyPasswordLink.textContent = '비밀번호수정';
@@ -73,7 +73,9 @@ const headerDropdownMenu = () => {
     postsTopBar.appendChild(writtenPostsButton);
     postsTopBar.appendChild(likePostsButton);
     postsTopBar.appendChild(numberSortImg);
+    
     posts.appendChild(postsTopBar);
+    posts.appendChild(postList);
     wrap.classList.add('drop');
     wrap.appendChild(titleComment);
     wrap.appendChild(posts);
@@ -96,7 +98,8 @@ const Header = (
     let rightBtnElement;
     let headerElement;
     let h1Element;
- 
+    
+
     if (leftBtn == 1 || leftBtn == 2) {
         leftBtnElement = document.createElement('img');
         leftBtnElement.classList.add('back');
@@ -131,6 +134,7 @@ const Header = (
 
             rightBtnElement.appendChild(profileElement);
             rightBtnElement.appendChild(Drop);
+            
         }
     }
 
@@ -142,6 +146,9 @@ const Header = (
     if (leftBtnElement) headerElement.appendChild(leftBtnElement);
     headerElement.appendChild(h1Element);
     if (rightBtnElement) headerElement.appendChild(rightBtnElement);
+
+    
+    
 
     return headerElement;
 };
