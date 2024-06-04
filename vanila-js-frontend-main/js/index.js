@@ -196,7 +196,9 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'time', buttons = boa
 }
 const selectPostsButtonHandler = async (event) => {
     if (event.target.tagName === 'BUTTON'){
+        
         const boardType = event.target.id;
+        searchContent.boardCategory = boardType;
         const boardList = document.querySelector('.boardList');
         const boardName = document.createElement('h3');
         const categorizeButton = document.createElement('button');
