@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 
 // 리다이렉션 미들웨어 추가
 app.use((req, res, next) => {
-    if (req.hostname && req.port === 80) {
+    if (req.hostname && req.port === 443) {
         // 리다이렉트할 URL을 설정
         const redirectUrl = `http://${req.hostname}:${redirectPort}${req.originalUrl}`;
         res.redirect(redirectUrl);
@@ -32,7 +32,7 @@ app.get('/', (req, res) => {
 // 기본 포트 (80)에서 리다이렉션 처리 서버를 시작합니다.
 const redirectServer = express();
 redirectServer.use(app);
-redirectServer.listen(80, () => {
+redirectServer.listen(443, () => {
     console.log('Redirect server is running on port 80 and redirecting to port 8080');
 });
 
