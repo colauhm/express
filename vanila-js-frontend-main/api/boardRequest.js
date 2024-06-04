@@ -1,6 +1,6 @@
 import { getServerUrl, getCookie } from '../utils/function.js';
 
-export const getLike = (postId, detail = false) => {
+export const getLike =  async (postId, detail = false) => {
     const result = fetch(`${getServerUrl()}/posts/like/${postId}/${detail}`, {
         headers: {
             session: getCookie('session'),
@@ -19,7 +19,7 @@ export const addLike = async(postId) => {
         },
         noCORS: true,
     });
-    console.log("addLike")
+    // console.log("addLike")
     return result;
 };
 export const deleteLike = async (postId) => {
@@ -31,7 +31,7 @@ export const deleteLike = async (postId) => {
         },
         noCORS: true,
     });
-    console.log("deletelike")
+    // console.log("deletelike")
     return result
 };
 export const getPost = (postId) => {

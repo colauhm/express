@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/posts',isLoggedIn, postController.getPosts);
 router.get('/posts/:post_id/', isLoggedIn, postController.getPost);
-router.get('/posts/like/:post_id/:detail', postController.getLike);
+router.get('/posts/like/:post_id/:detail',isLoggedIn, postController.getLike);
 router.post('/posts', isLoggedIn, postController.writePost);
 router.post('/posts/like/:post_id', isLoggedIn, postController.addLike);
 router.patch('/posts/:post_id', isLoggedIn, postController.updatePost);

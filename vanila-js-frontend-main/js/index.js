@@ -153,7 +153,7 @@ const selectedboardCategoryButtonSet = (selectedButtonId = 'time', buttons = boa
         button.disabled = false;
     });
     const selectButton = document.getElementById(`${selectedButtonId}`);
-    console.log(selectButton)
+    //console.log(selectButton)
     selectButton.disabled = true;
 }
 const selectPostsButtonHandler = async (event) => {
@@ -244,7 +244,7 @@ const searchDetailButtonSet = () => {
 // getBoardItem 함수
 const getBoardItem = async (searchContent, boardCategory = 'all', sortType ='time', offset = 0, limit = 4) => {
 
-    console.log(searchContent)
+   // console.log(searchContent)
     const response = await getPosts(offset, limit, boardCategory ,searchContent.search, searchContent.boardContentType, searchContent.searchText, sortType);
 
     if (!response.ok) {
@@ -260,7 +260,7 @@ const setIndexBoardItem = (boardData, boardType ,reset = false) => {
         free: document.querySelector('.freeBoard'),
         QnA: document.querySelector('.QnABoard')
     };
-    console.log(boardData)
+    //console.log(boardData)
     if (boardList && boardData) {
         //console.log(boardData)
 
@@ -355,25 +355,36 @@ const setIndexBoard  = async () => {
     setIndexBoardItem(QnAList, 'QnA');
 }
 
-const setUserInfo = () => {
-    const drop = document.querySelector('.drop');
-    drop.classList.toggle('none');
-    event.stopPropagation();
+const setUserInfo = (event) => {
 
-    const wrapElement = document.querySelector('.wrap');
-    const headerElement = document.querySelector('header');
+    if(event.target.tagName !== 'BUTTON'){
+        console.log(event.target.tagName)
+        const drop = document.querySelector('.drop');
+        drop.classList.toggle('none');
+        event.stopPropagation();
+
+        const wrapElement = document.querySelector('.wrap');
+        const headerElement = document.querySelector('header');
+        
+        moveElement(wrapElement);
+        moveElement(headerElement);
+    }
     
-    moveElement(wrapElement);
-    moveElement(headerElement);
 }
-const delectUserInfo = () => {
-    const drop = document.querySelector('.drop');
-    drop.classList.add('none');
-    const wrapElement = document.querySelector('.wrap');
-    const headerElement = document.querySelector('header');
+const delectUserInfo = (event) => {
     
-    moveElement(wrapElement, true);
-    moveElement(headerElement, true);
+    const eventButtonClass = event.target.classList.value;
+    if(eventButtonClass !== 'likePost' && eventButtonClass !=='writtenPost'){
+        console.log(eventButtonClass)
+        const drop = document.querySelector('.drop');
+        drop.classList.add('none');
+        const wrapElement = document.querySelector('.wrap');
+        const headerElement = document.querySelector('header');
+        
+        moveElement(wrapElement, true);
+        moveElement(headerElement, true);
+    }
+    
 }
 
 
@@ -397,7 +408,6 @@ const init = async () => {
             window.location.href = '/html/login.html';
             return;
         }
-
         const profileImagePath =
             data.data.profileImagePath ?? DEFAULT_PROFILE_IMAGE;
         const fullProfileImagePath = `${getServerUrl()}${profileImagePath}`;
@@ -407,12 +417,12 @@ const init = async () => {
         );
         const profileElement = document.querySelector('.profile');
         
-        profileElement.addEventListener('click', () => {
-            setUserInfo();
+        profileElement.addEventListener('click', (e) => {
+            setUserInfo(e);
         });
        
-        window.addEventListener('click', () =>{
-            delectUserInfo();
+        window.addEventListener('click', (e) =>{
+            delectUserInfo(e);
         })
         addInfinityScrollEvent();
 

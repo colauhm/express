@@ -1,17 +1,57 @@
-import { deleteCookie, getCookie, getServerUrl } from '../../utils/function.js';
-
+import { getPosts } from '../../api/indexRequest.js';
+import { deleteCookie, getCookie, getServerUrl,authCheck } from '../../utils/function.js';
+import {getLike} from '../../api/boardRequest.js'
 const DEFAULT_PROFILE_IMAGE = '/public/image/profile/default.jpg';
 
-const headerDropdownMenu = () => {
-    const wrap = document.createElement('div');
+const userPostInfo = async () => {
+    if(getCookie('session')){ 
+        const userData = await authCheck();
+        const writtenResponse = await getPosts(0, 999, 'all', true, 'searchWriter', userData.data.nickname, 'time');
+        const likePostIdResponse = await getLike();  
+        const likePostIdData = await likePostIdResponse.json();
+        const writtenData = await writtenResponse.json();
+        const likeResponse = await getPosts(0, 999, 'all', true, 'searchWriter', userData.data.nickname, 'time', likePostIdData)
+        
+
+        //console.log(likeData.data)
+          
+        //console.log(likeData);
+        const data = {
+            userData : userData,
+            writtenPost : writtenData,
+            //likePost : likeData
+        }    
+        
+        return data
+    }
     
+}
+const dropdownMenuData = await userPostInfo();
+
+const headerDropdownMenu = () => {
+    //console.log(data)
+    // console.log(likeData);
+    const userData = dropdownMenuData.userData;
+    const writtenPosts = dropdownMenuData.writtenPost;
+    //const likePosts = dropdownMenuData.likePost;
+    const wrap = document.createElement('div');
+    // console.log(writtenPostList.data)
     const titleComment = document.createElement('h3');
     const modifyInfoLink = document.createElement('a');
     const modifyPasswordLink = document.createElement('a');
     const logoutLink = document.createElement('a');
-    const userNickname = '';
+    //const userNickname = data.data.nickname;
+    const posts = document.createElement('div');
+    const postsTopBar = document.createElement('div');
+    const writtenPostsButton = document.createElement('button');
+    const likePostsButton = document.createElement('button');
 
-    titleComment.textContent = `${userNickname}님 환영합니다.`
+    writtenPostsButton.classList.add('writtenPost');
+    likePostsButton.classList.add('likePost');
+
+    writtenPostsButton.textContent = '작성한 글';
+    likePostsButton.textContent = '좋아요한 글';
+    titleComment.textContent = `${userData.data.nickname}님 환영합니다.`
     modifyInfoLink.textContent = '회원정보수정';
     modifyPasswordLink.textContent = '비밀번호수정';
     logoutLink.textContent = '로그아웃';
@@ -23,9 +63,12 @@ const headerDropdownMenu = () => {
         deleteCookie('userId');
         location.href = '/html/login.html';
     });
-
+    postsTopBar.appendChild(writtenPostsButton);
+    postsTopBar.appendChild(likePostsButton);
+    posts.appendChild(postsTopBar);
     wrap.classList.add('drop');
     wrap.appendChild(titleComment);
+    wrap.appendChild(posts);
     wrap.appendChild(modifyInfoLink);
     wrap.appendChild(modifyPasswordLink);
     wrap.appendChild(logoutLink);
@@ -95,11 +138,11 @@ const Header = (
     return headerElement;
 };
 
-window.addEventListener('click', e => {
-    const dropMenu = document.querySelector('.drop');
-    if (dropMenu && !dropMenu.classList.contains('none')) {
-        dropMenu.classList.add('none');
-    }
-});
+// window.addEventListener('click', e => {
+//     const dropMenu = document.querySelector('.drop');
+//     if (dropMenu && !dropMenu.classList.contains('none')) {
+//         dropMenu.classList.add('none');
+//     }
+// });
 
 export default Header;

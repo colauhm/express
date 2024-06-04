@@ -164,7 +164,7 @@ export const getPosts = async (request, response) => {
             sortType
         };
         const results = await postModel.getPosts(requestData, response);
-
+        console.log(results)
         if (!results || results === null)
             return response.status(404).json({
                 status: 404,
@@ -188,14 +188,7 @@ export const getPosts = async (request, response) => {
 };
 
 export const getLike = async (request, response) => {
-    try {
-        if (!request.params.post_id)
-            return response.status(400).json({
-                status: 400,
-                message: 'invalid_post_id',
-                data: null,
-            });
-
+   
         const postId = request.params.post_id;
         const userId = request.headers.userid;
         const detail = request.params.detail;
@@ -205,27 +198,13 @@ export const getLike = async (request, response) => {
             detail : detail
         };
         const results = await postModel.getLike(requestData, response);
-
-        if (!results || results === null)
-            return response.status(404).json({
-                status: 404,
-                message: 'not_a_single_post',
-                data: null,
-            });
-
+    
+      
         return response.status(200).json({
             status: 200,
             message: null,
             data: results,
         });
-    } catch (error) {
-        console.error(error);
-        return response.status(500).json({
-            status: 500,
-            message: 'internal_server_error',
-            data: null,
-        });
-    }
 }
 export const getPost = async (request, response) => {
     try {
