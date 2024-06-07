@@ -166,8 +166,8 @@ search.searchCheck.addEventListener('change', async () => {
     searchContent.search = search.searchCheck.checked;
     //boardSort.container.removeEventListener('click', sortDetailPosts);
     const boardList = document.querySelector('.boardList');
-    boardList.innerHTML = '';
     if (!searchContent.search){
+        boardList.innerHTML = '';
         searchContent.searchText = '';
         searchContent.boardCategory = selectBoardCategory;
     }
